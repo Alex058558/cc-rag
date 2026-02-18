@@ -10,6 +10,7 @@ security = HTTPBearer()
 class AuthUser(BaseModel):
     id: str
     email: str | None = None
+    token: str | None = None
 
 
 async def get_current_user(
@@ -34,4 +35,4 @@ async def get_current_user(
         )
 
     user_data = response.json()
-    return AuthUser(id=user_data["id"], email=user_data.get("email"))
+    return AuthUser(id=user_data["id"], email=user_data.get("email"), token=token)

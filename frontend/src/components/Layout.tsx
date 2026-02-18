@@ -1,36 +1,39 @@
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Outlet, NavLink } from 'react-router-dom'
+import { MessageSquare, FileUp, LogOut } from 'lucide-react'
 
 export default function Layout() {
   const { user, signOut } = useAuth()
 
   return (
     <div className="flex h-screen bg-background">
-      <aside className="flex w-56 flex-col border-r bg-muted/40 p-4">
-        <h1 className="mb-6 text-lg font-semibold">CC-RAG</h1>
-        <nav className="flex flex-1 flex-col gap-1">
-          <NavLink
-            to="/chat"
-            className={({ isActive }) =>
-              `rounded-md px-3 py-2 text-sm transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`
-            }
-          >
-            Chat
-          </NavLink>
-          <NavLink
-            to="/import"
-            className={({ isActive }) =>
-              `rounded-md px-3 py-2 text-sm transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted'}`
-            }
-          >
-            Import
-          </NavLink>
-        </nav>
-        <div className="border-t pt-4">
-          <p className="mb-2 truncate text-xs text-muted-foreground">{user?.email}</p>
-          <Button variant="ghost" size="sm" className="w-full" onClick={signOut}>
-            Sign Out
+      <aside className="flex w-14 flex-col items-center border-r bg-muted/40 py-4 gap-2">
+        <NavLink
+          to="/chat"
+          className={({ isActive }) =>
+            `flex h-10 w-10 items-center justify-center rounded-md transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground'}`
+          }
+          title="Chat"
+        >
+          <MessageSquare className="h-5 w-5" />
+        </NavLink>
+        <NavLink
+          to="/import"
+          className={({ isActive }) =>
+            `flex h-10 w-10 items-center justify-center rounded-md transition-colors ${isActive ? 'bg-primary text-primary-foreground' : 'hover:bg-muted text-muted-foreground'}`
+          }
+          title="Import"
+        >
+          <FileUp className="h-5 w-5" />
+        </NavLink>
+        <div className="flex-1" />
+        <div className="text-center">
+          <p className="text-[10px] text-muted-foreground truncate w-12" title={user?.email ?? ''}>
+            {user?.email?.split('@')[0]}
+          </p>
+          <Button variant="ghost" size="icon" className="h-8 w-8 mt-1" onClick={signOut} title="Sign Out">
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </aside>

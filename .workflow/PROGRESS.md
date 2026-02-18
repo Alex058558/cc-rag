@@ -13,7 +13,7 @@
 ## Phase 1: 專案基礎建設
 
 - [x] 後端腳手架 (FastAPI + config + database)
-- [ ] Supabase project 建立與設定
+- [x] Supabase project 建立與設定
 - [x] Supabase tables: `conversations`, `messages` (SQL migration 已寫)
 - [x] RLS policies 設定 (SQL migration 已寫)
 - [ ] Storage bucket 建立 (需在 Supabase dashboard 操作)
@@ -27,15 +27,17 @@
 
 ## Phase 2: 聊天介面 + LLM 串接
 
-- [ ] LLM client 封裝 (OpenAI SDK → Gemini)
-- [ ] Pydantic schemas 定義
-- [ ] 聊天 API endpoints (routes/chat.py)
-- [ ] 聊天業務邏輯 (services/chat.py)
-- [ ] 前端 ChatPage + MessageList + MessageInput
-- [ ] 前端 ConversationSidebar
-- [ ] SSE 串流 hook (useChat.ts)
-- [ ] 對話管理 hook (useConversations.ts)
-- [ ] Phase 2 驗證：建立對話、發送訊息、串流回應、歷史保存
+- [x] LLM client 封裝 (OpenAI SDK → Gemini)
+- [x] Pydantic schemas 定義
+- [x] 聊天 API endpoints (routes/chat.py) — SSE streaming
+- [x] 聊天業務邏輯 (services/chat.py) — conversation CRUD + LLM stream
+- [x] 前端 ChatPage + MessageList + MessageInput
+- [x] 前端 ConversationSidebar
+- [x] SSE 串流 hook (useChat.ts)
+- [x] 對話管理 hook (useConversations.ts)
+- [x] API helper (lib/api.ts)
+- [x] Layout 改為 icon sidebar + chat 內嵌 conversation sidebar
+- [-] Phase 2 驗證：建立對話、發送訊息、串流回應、歷史保存（代碼通過靜態檢查，待實際端到端測試）
 
 ## Phase 3: 文件匯入 + 處理管線
 

@@ -5,20 +5,27 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default function LoginPage() {
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, signInWithMagicLink } = useAuth()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [isSignUp, setIsSignUp] = useState(false)
+  const [isMagicLink, setIsMagicLink] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setSuccessMessage('')
     setLoading(true)
     try {
-      if (isSignUp) {
+      if (isMagicLink) {
+        await signInWithMagicLink(email)
+        setSuccessMessage('Magic Link 已寄出！請檢查你的信箱。')
+      } else if (isSignUp) {
         await signUp(email, password)
+        setSuccessMessage('註冊成功！請確認你的信箱。')
       } else {
         await signIn(email, password)
       }
@@ -49,29 +56,47 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
+            {!isMagicLink && (
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+            )}
             {error && <p className="text-sm text-destructive">{error}</p>}
+            {successMessage && <p className="text-sm text-green-500">{successMessage}</p>}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
+              {loading ? 'Loading...' : isMagicLink ? 'Send Magic Link' : isSignUp ? 'Sign Up' : 'Sign In'}
             </Button>
             <Button
               type="button"
               variant="ghost"
-              className="w-full"
+              className="w-full text-sm"
               onClick={() => {
-                setIsSignUp(!isSignUp)
+                setIsMagicLink(!isMagicLink)
                 setError('')
+                setSuccessMessage('')
               }}
             >
-              {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+              {isMagicLink ? 'Use Password' : 'Use Magic Link'}
             </Button>
+            {!isMagicLink && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
+                onClick={() => {
+                  setIsSignUp(!isSignUp)
+                  setError('')
+                  setSuccessMessage('')
+                }}
+              >
+                {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>
