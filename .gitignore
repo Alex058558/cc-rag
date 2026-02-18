@@ -1,6 +1,30 @@
+# Environment
 .env
+.env.*
+!env.example
+
+# Python
+.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.egg-info/
+
+# Node
 node_modules/
 dist/
+dist-ssr/
 .vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.sw?
