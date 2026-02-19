@@ -16,7 +16,7 @@
 - [x] Supabase project 建立與設定
 - [x] Supabase tables: `conversations`, `messages` (SQL migration 已寫)
 - [x] RLS policies 設定 (SQL migration 已寫)
-- [ ] Storage bucket 建立 (需在 Supabase dashboard 操作)
+- [x] Storage bucket 建立（已由 `004_storage_bucket.sql` migration 建立並套用 RLS）
 - [x] 後端 Auth middleware (JWT 驗證)
 - [x] 前端腳手架 (Vite + React + TypeScript + Tailwind + shadcn/ui)
 - [x] 前端 Supabase client 設定
@@ -50,7 +50,7 @@
 - [x] 前端 ImportPage + FileDropZone
 - [x] 前端 DocumentList + ProcessingStatus
 - [x] 前端 useDocuments hook (含 polling)
-- [-] Phase 3 驗證：上傳文件、分塊、存入 pgvector、去重（待端到端測試）
+- [x] Phase 3 驗證：上傳文件、分塊、存入 pgvector、去重（已完成端到端流程）
 
 ## Phase 4: RAG 檢索 + 聊天整合
 
