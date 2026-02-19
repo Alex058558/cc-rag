@@ -21,17 +21,17 @@ LLM (Gemini via OpenAI-compatible API)
 
 ## 技術選型
 
-| 層級 | 技術 | 說明 |
-|------|------|------|
-| Frontend | React + TypeScript + Vite + Tailwind + shadcn/ui | 現代化 UI |
-| Backend | Python + FastAPI | 輕量高效 |
-| Database | Supabase (Postgres + pgvector) | 全託管，練習 Postgres |
-| Auth | Supabase Auth | 內建 RLS |
-| Storage | Supabase Storage | 文件存放 |
-| LLM | OpenAI SDK → Gemini (Google AI Studio) | OpenAI-compatible，省錢 |
-| Embedding | Gemini text-embedding-004 | 768 維 |
-| Streaming | SSE (Server-Sent Events) | 即時回應串流 |
-| 文件處理 | Docling | 多格式支援 (PDF, DOCX, HTML, MD) |
+| 層級      | 技術                                             | 說明                             |
+|-----------|--------------------------------------------------|----------------------------------|
+| Frontend  | React + TypeScript + Vite + Tailwind + shadcn/ui | 現代化 UI                        |
+| Backend   | Python + FastAPI                                 | 輕量高效                         |
+| Database  | Supabase (Postgres + pgvector)                   | 全託管，練習 Postgres             |
+| Auth      | Supabase Auth                                    | 內建 RLS                         |
+| Storage   | Supabase Storage                                 | 文件存放                         |
+| LLM       | OpenAI SDK → Gemini (Google AI Studio)           | OpenAI-compatible，省錢           |
+| Embedding | Gemini text-embedding-004                        | 768 維                           |
+| Streaming | SSE (Server-Sent Events)                         | 即時回應串流                     |
+| 文件處理  | Docling                                          | 多格式支援 (PDF, DOCX, HTML, MD) |
 
 ## 關鍵技術決策
 
@@ -177,13 +177,26 @@ LLM (Gemini via OpenAI-compatible API)
 
 ## 後續擴充功能（暫不實作）
 
-| 優先級 | 功能 | 價值 | 複雜度 |
-|--------|------|------|--------|
-| 1 | Metadata Extraction | LLM 自動提取文件 metadata，提升檢索精度 | 中 |
-| 2 | Sub-Agents | 隔離 context 的子 agent，委派特定分析任務 | 中高 |
-| 3 | Web Search | 知識庫外的 fallback，提升回答覆蓋率 | 低 |
-| 4 | Text-to-SQL | 對結構化資料的自然語言查詢 | 中 |
-| 5 | LangSmith Observability | 追蹤 LLM 呼叫、檢索品質、成本 | 低 |
+### Docling OCR 模式評估
+
+```python
+# 方式 1：Docling 內建 OCR（需要 docling[ocr]）
+from docling.document_converter import DocumentConverter
+converter = DocumentConverter()
+# 自動偵測並 OCR 圖片區域
+
+# 方式 2：EasyOCR（輕量一點）
+import easyocr
+reader = easyocr.Reader(['ch_tra', 'en'])
+```
+
+| 優先級 | 功能                    | 價值                                     | 複雜度 |
+|--------|-------------------------|------------------------------------------|--------|
+| 1      | Metadata Extraction     | LLM 自動提取文件 metadata，提升檢索精度   | 中     |
+| 2      | Sub-Agents              | 隔離 context 的子 agent，委派特定分析任務 | 中高   |
+| 3      | Web Search              | 知識庫外的 fallback，提升回答覆蓋率       | 低     |
+| 4      | Text-to-SQL             | 對結構化資料的自然語言查詢               | 中     |
+| 5      | LangSmith Observability | 追蹤 LLM 呼叫、檢索品質、成本              | 低     |
 
 ---
 

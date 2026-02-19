@@ -37,18 +37,20 @@
 - [x] 對話管理 hook (useConversations.ts)
 - [x] API helper (lib/api.ts)
 - [x] Layout 改為 icon sidebar + chat 內嵌 conversation sidebar
-- [-] Phase 2 驗證：建立對話、發送訊息、串流回應、歷史保存（代碼通過靜態檢查，待實際端到端測試）
+- [x] Phase 2 驗證：建立對話、發送訊息、串流回應、歷史保存
 
 ## Phase 3: 文件匯入 + 處理管線
 
-- [ ] 文件 API endpoints (routes/documents.py)
-- [ ] 文件處理管線 (Docling + chunking + hashing)
-- [ ] Embedding 服務 (Gemini text-embedding-004)
-- [ ] 記錄管理 (去重、清理)
-- [ ] Supabase tables: `documents`, `document_chunks`
-- [ ] 前端 ImportPage + FileDropZone
-- [ ] 前端 DocumentList + ProcessingStatus
-- [ ] Phase 3 驗證：上傳文件、分塊、存入 pgvector、去重
+- [x] 文件 API endpoints (routes/documents.py)
+- [x] 文件處理管線 (Docling + chunking + hashing)
+- [x] Embedding 服務 (Gemini text-embedding-004)
+- [x] 記錄管理 (去重、清理)
+- [x] Supabase tables: `documents`, `document_chunks` (SQL migration 已寫)
+- [x] Supabase Storage bucket migration (004_storage_bucket.sql)
+- [x] 前端 ImportPage + FileDropZone
+- [x] 前端 DocumentList + ProcessingStatus
+- [x] 前端 useDocuments hook (含 polling)
+- [-] Phase 3 驗證：上傳文件、分塊、存入 pgvector、去重（待端到端測試）
 
 ## Phase 4: RAG 檢索 + 聊天整合
 
