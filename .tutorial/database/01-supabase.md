@@ -4,12 +4,12 @@
 
 Supabase 是一個開源的 Firebase 替代品，提供：
 
-| 功能 | 說明 |
-|------|------|
-| PostgreSQL | 傳統關聯式資料庫 |
-| pgvector | 向量搜尋（RAG 核心！） |
-| Auth | 用戶註冊/登入 |
-| Storage | 檔案儲存（PDF 等） |
+| 功能       | 說明                |
+|------------|---------------------|
+| PostgreSQL | 傳統關聯式資料庫    |
+| pgvector   | 向量搜尋（RAG 核心！） |
+| Auth       | 用戶註冊/登入       |
+| Storage    | 檔案儲存（PDF 等）    |
 
 ## 建立專案
 
@@ -52,6 +52,7 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 1. `001_initial_schema.sql` - 建立 conversations + messages 表
 2. `002_vector_search.sql` - 建立 documents + document_chunks + 向量搜尋
 3. `003_rls_policies.sql` - 設定權限
+4. `004_storage_bucket.sql` - 建立檔案儲存 bucket
 
 ## 在 Python 後端使用
 
