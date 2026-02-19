@@ -54,13 +54,13 @@
 
 ## Phase 4: RAG 檢索 + 聊天整合
 
-- [ ] 檢索服務 (vector + keyword + hybrid + reranking)
-- [ ] Agent 工具定義 (retrieve_documents tool)
-- [ ] Agent 核心 (tool calling loop)
-- [ ] 聊天 API 整合 RAG
+- [-] 檢索服務 (目前 vector + similarity 篩選；hybrid/reranking 未完成)
+- [x] Agent 工具定義 (retrieve_documents tool)
+- [x] Agent 核心 (tool calling loop)
+- [x] 聊天 API 整合 RAG
 - [ ] Supabase vector search function + 全文搜索 index
-- [ ] 前端引用來源顯示 (SourceCard)
-- [ ] Phase 4 驗證：聊天引用文件、hybrid search、來源顯示
+- [x] 前端引用來源顯示 (SourceCard / Citation popover)
+- [-] Phase 4 驗證：聊天引用文件、hybrid search、來源顯示（hybrid/reranking 待補）
 
 ---
 

@@ -7,8 +7,8 @@ import MessageInput from '@/components/chat/MessageInput'
 
 export default function ChatPage() {
   const [activeId, setActiveId] = useState<string | null>(null)
-  const { conversations, refresh, create, remove } = useConversations()
-  const { messages, streaming, loadMessages, send, stop, clear } = useChat(activeId)
+  const { conversations, refresh, remove } = useConversations()
+  const { messages, streaming, loadMessages, send, stop, clear } = useChat()
 
   // 追蹤 streaming 狀態，避免 streaming 期間 loadMessages 覆蓋前端訊息
   const streamingRef = useRef(false)

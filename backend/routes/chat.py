@@ -1,14 +1,15 @@
 import json
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+from backend.agent.agent import stream_agent_response
 from backend.auth.middleware import AuthUser, get_current_user
 from backend.database import get_supabase_client
 from backend.llm.client import get_llm_client
 from backend.llm.schemas import ChatRequest, ConversationOut, MessageOut
 from backend.services.chat import (
     get_or_create_conversation,
-    stream_chat_response,
     get_conversation_messages,
+    save_message,
     list_conversations,
     delete_conversation,
     update_conversation_title,
@@ -53,16 +54,23 @@ async def chat(body: ChatRequest, user: AuthUser = Depends(get_current_user)):
 
     conversation = await get_or_create_conversation(db, user.id, body.conversation_id)
     conversation_id = conversation["id"]
-
     is_first = not body.conversation_id
+
+    await save_message(db, conversation_id, user.id, "user", body.message)
+    history = await get_conversation_messages(db, conversation_id, user.id)
 
     async def event_stream():
         yield f"data: {json.dumps({'conversation_id': conversation_id})}\n\n"
 
-        async for token in stream_chat_response(
-            llm, db, conversation_id, user.id, body.message
-        ):
-            yield f"data: {json.dumps({'token': token})}\n\n"
+        full_response = ""
+        async for event in stream_agent_response(llm, user.id, history):
+            if event["type"] == "sources":
+                yield f"data: {json.dumps({'sources': event['sources']})}\n\n"
+            elif event["type"] == "token":
+                full_response += event["token"]
+                yield f"data: {json.dumps({'token': event['token']})}\n\n"
+
+        await save_message(db, conversation_id, user.id, "assistant", full_response)
 
         if is_first:
             await update_conversation_title(llm, db, conversation_id, body.message)

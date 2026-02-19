@@ -1,47 +1,37 @@
 # HANDOVER
 
-> Updated: 2026-02-19
+> Updated: 2026-02-19 17:10
 > Branch: main
 
 ## Current State
 
-Phase 3 完成並驗證通過。文件上傳 → Docling 解析 → chunking → embedding → pgvector 全管線正常運作。
+- Phase 4 已進入可用版本：聊天可檢索文件並回傳引用來源。
+- 前端 citation 顯示已修正重複渲染問題，popover 可顯示完整 chunk 並補充引用關聯文字。
+- frontend build 先前失敗的未使用變數已修正。
 
 ## Done (recent)
 
-**Phase 3 後端**
-- `backend/services/embedding.py` — Gemini text-embedding-004 via OpenAI SDK，batch 20
-- `backend/services/document_processor.py` — SHA-256 hash、Docling 解析（ThreadPoolExecutor）、paragraph chunking（1500 chars / 150 overlap）
-- `backend/services/record_manager.py` — content_hash 去重、chunk 批次寫入
-- `backend/routes/documents.py` — POST/GET/DELETE，BackgroundTask 處理管線
-- `backend/main.py` — 加入 logging 設定
-- `backend/requirements.txt` — 加入 docling
+- `backend/services/retrieval.py`：已支援向量檢索 + `top_k=5` + `min_similarity=0.3` 篩選。
+- `backend/agent/tools.py`：已定義 `retrieve_documents` tool。
+- `backend/agent/agent.py`：已整合 tool calling 與來源回傳 (`sources` 事件)。
+- `backend/routes/chat.py`：SSE 已串接 `sources` 與 `token` 事件。
+- `frontend/src/components/chat/MessageList.tsx`：citation 解析改為逐一標記解析，避免 `[n]` 重複輸出。
+- `frontend/src/components/chat/Citation.tsx`：popover 改為完整 chunk 可捲動顯示，並加入 `Referenced answer text`。
+- `frontend/src/hooks/useChat.ts`、`frontend/src/pages/ChatPage.tsx`：移除未使用變數，恢復 build 可通過。
 
-**Phase 3 前端**
-- `frontend/src/hooks/useDocuments.ts` — fetch/upload/delete + 有 active 文件時每 3s polling
-- `frontend/src/components/import/FileDropZone.tsx` — 拖拽 + click upload
-- `frontend/src/components/import/DocumentList.tsx` — 文件清單 + status badge
-- `frontend/src/components/import/ProcessingStatus.tsx` — processing banner
-- `frontend/src/pages/ImportPage.tsx` — 整合以上元件
+## In Progress
 
-**Supabase**
-- `supabase/migrations/004_storage_bucket.sql` — documents bucket + Storage RLS
-
-**已知 Gotchas（已修）**
-- Supabase Storage 不接受非 ASCII key → storage path 用 `{user_id}/{hash}{ext}`
-- Gemini embedding API 回傳 `index=None` → 移除 sort by index
+- 檢索策略仍為固定 `top_k`，尚未加入動態 Top-K 與 rerank。
+- 尚未建立檢索品質觀測（例如命中率、引用對齊率、每題來源數）。
 
 ## Next Actions
 
-開始 Phase 4：RAG 檢索 + 聊天整合
-
-1. 建立 `backend/services/retrieval.py` — vector search via `match_documents()` RPC
-2. 建立 `backend/agent/tools.py` — `retrieve_documents` tool 定義
-3. 建立 `backend/agent/agent.py` — tool calling loop
-4. 更新 `backend/routes/chat.py` — 整合 RAG
-5. 前端：`SourceCard.tsx` + 更新 `MessageList.tsx` 顯示引用來源
+1. 在 `backend/config.py` 增加 RAG 參數（`rag_top_k_*`、`rag_prefetch_k`、`rag_min_similarity`），改為可配置。
+2. 在 `backend/services/retrieval.py` 增加兩段式流程：先 prefetch 候選，再依規則動態決定最終 `k`。
+3. 新增簡易 rerank（關鍵詞覆蓋 + 結構命中）與檢索 log，完成後用 10-20 題做離線比較。
 
 ## Reference Docs
 
-- `.workflow/PLAN.md` — 完整技術架構與 4 Phase 實作計畫
-- `.workflow/PROGRESS.md` — 各 Phase 細項進度追蹤
+- `.workflow/PLAN.md`
+- `.workflow/PROGRESS.md`
+- `.tutorial/rag/04-retrieval-tuning.md`

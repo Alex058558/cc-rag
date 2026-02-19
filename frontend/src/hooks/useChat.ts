@@ -3,14 +3,24 @@ import { useAuth } from '@/contexts/AuthContext'
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
+export interface Source {
+  id: string
+  document_id: string
+  filename: string
+  content: string
+  chunk_index: number
+  similarity: number
+}
+
 export interface Message {
   id: string
   role: 'user' | 'assistant' | 'system'
   content: string
   created_at: string
+  sources?: Source[]
 }
 
-export function useChat(conversationId: string | null) {
+export function useChat() {
   const { session } = useAuth()
   const [messages, setMessages] = useState<Message[]>([])
   const [streaming, setStreaming] = useState(false)
@@ -68,10 +78,7 @@ export function useChat(conversationId: string | null) {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            conversation_id: convId,
-            message,
-          }),
+          body: JSON.stringify({ conversation_id: convId, message }),
           signal: controller.signal,
         })
 
@@ -98,6 +105,13 @@ export function useChat(conversationId: string | null) {
               const data = JSON.parse(payload)
               if (data.conversation_id && !convId) {
                 onConversationCreated?.(data.conversation_id)
+              }
+              if (data.sources) {
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === assistantId ? { ...m, sources: data.sources } : m,
+                  ),
+                )
               }
               if (data.token) {
                 setMessages((prev) =>
