@@ -105,13 +105,9 @@ cc-rag/
 
 ## チュートリアル資料
 
-全体を素早く把握するなら、まず以下を確認してください。
+プロジェクト全体を素早く把握するなら：[.tutorial/README.md](.tutorial/README.md)
 
-- `.tutorial/basic/`
-- `.tutorial/backend/`
-- `.tutorial/frontend/`
-- `.tutorial/rag/`
-- `.tutorial/database/`
+Phase 別メインガイド、RAG 専門解説、フロントエンド/バックエンド技術説明、データベース概念を含みます。
 
 ## セキュリティ注意
 

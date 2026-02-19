@@ -31,19 +31,11 @@
 
 ## 關鍵名詞
 
-### SSE (Server-Sent Events)
+> 完整術語定義見 [RAG 名詞表](07-rag-glossary.md)，SSE 深度解說見 [rag/02-sse-streaming.md](../rag/02-sse-streaming.md)
 
-伺服器持續推送資料給前端，適合顯示 LLM 的 token 串流。
-
-### Token Streaming
-
-不是等整段生成完才回傳，而是邊生成邊回傳，體感更即時。
-
-### Stateless API
-
-API 本身不保存 session 記憶，每次請求由應用層帶入所需歷史。
-
-意思是：後端不幫你偷偷記東西，該帶的 context 要自己帶齊。
+- **SSE**：伺服器持續推送資料給前端，適合 LLM token 串流。
+- **Token Streaming**：邊生成邊回傳，不等全部完成，體感更即時。
+- **Stateless API**：後端不保存 session，該帶的 context 要自己帶齊。
 
 ## 實際流程
 

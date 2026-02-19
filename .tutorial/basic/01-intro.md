@@ -44,19 +44,21 @@ CC-RAG 是一個 **RAG（檢索增強生成）應用程式**。
 - `002_vector_search.sql` - documents + document_chunks + 向量搜尋
 - `003_rls_policies.sql` - 全部 4 張表的 RLS policies
 
-## 學習路徑（建議閱讀順序）
+## 學習路徑
 
-建議按這個順序看：
+> 完整教學導覽見 [.tutorial/README.md](../README.md)
 
-1. `.tutorial/basic/03-phase-1-foundation.md`
-2. `.tutorial/basic/04-phase-2-chat-llm.md`
-3. `.tutorial/basic/05-phase-3-document-pipeline.md`
-4. `.tutorial/basic/06-phase-4-rag-chat-integration.md`
-5. `.tutorial/basic/07-rag-glossary.md`
+建議按這個順序看主線：
 
-搭配專題章節：
+1. [Phase 1 基礎建設](03-phase-1-foundation.md)
+2. [Phase 2 聊天與 LLM](04-phase-2-chat-llm.md)
+3. [Phase 3 文件管線](05-phase-3-document-pipeline.md)
+4. [Phase 4 RAG 聊天整合](06-phase-4-rag-chat-integration.md)
+5. [RAG 名詞表](07-rag-glossary.md)（隨時查閱）
 
-- `.tutorial/rag/01-concept.md`
-- `.tutorial/rag/02-sse-streaming.md`
-- `.tutorial/rag/03-document-pipeline.md`
-- `.tutorial/rag/04-retrieval-tuning.md`
+搭配專題深入：
+
+- [RAG 核心概念](../rag/01-concept.md)
+- [SSE 串流回應](../rag/02-sse-streaming.md)
+- [文件處理管線](../rag/03-document-pipeline.md)
+- [檢索調參](../rag/04-retrieval-tuning.md)

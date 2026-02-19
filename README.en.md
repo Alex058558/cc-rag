@@ -105,13 +105,9 @@ cc-rag/
 
 ## Tutorial Docs
 
-To understand the project quickly, start here:
+To understand the project quickly, start here: [.tutorial/README.md](.tutorial/README.md)
 
-- `.tutorial/basic/`
-- `.tutorial/backend/`
-- `.tutorial/frontend/`
-- `.tutorial/rag/`
-- `.tutorial/database/`
+Includes phase-by-phase guides, RAG deep dives, frontend/backend tech notes, and database concepts.
 
 ## Security Notes
 

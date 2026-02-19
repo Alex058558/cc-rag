@@ -105,13 +105,9 @@ cc-rag/
 
 ## 教學文件
 
-想快速了解整個專案，從這邊看：
+想快速了解整個專案，從這邊開始：[.tutorial/README.md](.tutorial/README.md)
 
-- `.tutorial/basic/`
-- `.tutorial/backend/`
-- `.tutorial/frontend/`
-- `.tutorial/rag/`
-- `.tutorial/database/`
+包含 Phase 主線教學、RAG 專題深入、前後端技術說明、資料庫概念等。
 
 ## 安全提醒
 

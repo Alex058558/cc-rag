@@ -177,19 +177,6 @@ LLM (Gemini via OpenAI-compatible API)
 
 ## 後續擴充功能（暫不實作）
 
-### Docling OCR 模式評估
-
-```python
-# 方式 1：Docling 內建 OCR（需要 docling[ocr]）
-from docling.document_converter import DocumentConverter
-converter = DocumentConverter()
-# 自動偵測並 OCR 圖片區域
-
-# 方式 2：EasyOCR（輕量一點）
-import easyocr
-reader = easyocr.Reader(['ch_tra', 'en'])
-```
-
 | 優先級 | 功能                    | 價值                                     | 複雜度 |
 |--------|-------------------------|------------------------------------------|--------|
 | 1      | Metadata Extraction     | LLM 自動提取文件 metadata，提升檢索精度   | 中     |
@@ -230,28 +217,35 @@ cc-rag/
 ├── frontend/
 │   ├── package.json
 │   ├── vite.config.ts
-│   ├── tailwind.config.ts
-│   ├── tsconfig.json
 │   └── src/
 │       ├── App.tsx
 │       ├── main.tsx
 │       ├── lib/
-│       │   └── supabase.ts
+│       │   ├── api.ts
+│       │   ├── supabase.ts
+│       │   └── utils.ts
 │       ├── contexts/
 │       │   └── AuthContext.tsx
 │       ├── hooks/
 │       │   ├── useChat.ts
-│       │   └── useConversations.ts
+│       │   ├── useConversations.ts
+│       │   └── useDocuments.ts
 │       ├── pages/
 │       │   ├── LoginPage.tsx
 │       │   ├── ChatPage.tsx
 │       │   └── ImportPage.tsx
 │       └── components/
 │           ├── Layout.tsx
+│           ├── ui/
+│           │   ├── button.tsx
+│           │   ├── card.tsx
+│           │   ├── input.tsx
+│           │   └── popover.tsx
 │           ├── chat/
 │           │   ├── MessageList.tsx
 │           │   ├── MessageInput.tsx
 │           │   ├── ConversationSidebar.tsx
+│           │   ├── Citation.tsx
 │           │   └── SourceCard.tsx
 │           └── import/
 │               ├── FileDropZone.tsx
@@ -261,9 +255,17 @@ cc-rag/
 │   └── migrations/
 │       ├── 001_initial_schema.sql
 │       ├── 002_vector_search.sql
-│       └── 003_rls_policies.sql
-└── .workflow/
-    ├── PLAN.md
-    ├── PROGRESS.md
-    └── HANDOVER.md
+│       ├── 003_rls_policies.sql
+│       └── 004_storage_bucket.sql
+├── .workflow/
+│   ├── PLAN.md
+│   ├── PROGRESS.md
+│   └── HANDOVER.md
+└── .tutorial/
+    ├── README.md
+    ├── basic/
+    ├── backend/
+    ├── frontend/
+    ├── database/
+    └── rag/
 ```

@@ -14,6 +14,8 @@
 4. 產生 embedding
 5. 寫入資料庫與向量欄位
 
+> 完整實作細節（程式碼、SQL schema、踩坑紀錄）見 [rag/03-document-pipeline.md](../rag/03-document-pipeline.md)
+
 ## 功能清單（對應實作）
 
 ### 後端
@@ -35,28 +37,6 @@
 
 - `documents`：文件 metadata（檔名、狀態、hash）
 - `document_chunks`：切塊內容 + 向量
-
-## 關鍵名詞
-
-### Chunk
-
-把長文切成小段，讓檢索能以段落為單位命中。
-
-如果不切 chunk，模型每次都得吃整份文件，慢、貴、而且很難精準對焦。
-
-### Overlap
-
-相鄰 chunk 的重疊區，避免關鍵句剛好被切斷。
-
-這個看起來很小，但常常是檢索品質的分水嶺。
-
-### Embedding
-
-把文字轉成向量。語意越接近，向量距離越近。
-
-### Content Hash
-
-用檔案內容計算 SHA-256，避免重複上傳相同檔案後重複計算成本。
 
 ## 狀態機（documents.status）
 

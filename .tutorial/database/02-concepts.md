@@ -8,6 +8,7 @@
 001_initial_schema.sql  → 建立表格
 002_vector_search.sql   → 新增功能
 003_rls_policies.sql    → 新增權限
+004_storage_bucket.sql  → 建立檔案儲存 bucket
 ```
 
 每次改資料庫結構就新增一個檔案，團隊都能同步。
@@ -54,6 +55,27 @@ create table document_chunks (
 ### 003_rls_policies.sql
 
 設定 **RLS (Row Level Security)**，讓用戶只能存取自己的資料。
+
+### 004_storage_bucket.sql
+
+建立 `documents` Storage bucket（私有），搭配 RLS 確保使用者只能存取自己的檔案。
+
+```sql
+-- 建立私有 bucket
+insert into storage.buckets (id, name, public)
+values ('documents', 'documents', false);
+
+-- Storage RLS: 用 foldername 第一段比對 user_id
+create policy "Users can upload own documents"
+  on storage.objects for insert
+  to authenticated
+  with check (
+    bucket_id = 'documents'
+    and (storage.foldername(name))[1] = auth.uid()::text
+  );
+```
+
+上傳路徑設計為 `{user_id}/{content_hash}{ext}`，第一層資料夾就是 user_id，RLS 用 `storage.foldername()` 取第一段做比對。
 
 ## RLS (Row Level Security)
 

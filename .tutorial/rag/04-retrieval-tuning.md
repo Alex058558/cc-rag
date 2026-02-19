@@ -1,14 +1,14 @@
-# 檢索調參：動態 Top-K 與 Rerank 計畫
+# 檢索調參：動態 Top-K 與 Rerank
 
 ## 這份文件在講什麼
 
-記錄目前專案的檢索行為、限制來源，以及下一步要怎麼升級成可配置動態 Top-K。
+解釋目前專案的檢索行為、為什麼固定 Top-K 不夠用，以及動態 Top-K 和 Rerank 的概念。
 
-## 目前狀態（2026-02-19）
+## 目前狀態
 
-- 目前 `retrieve_chunks()` 使用固定 `top_k=5`。
-- 目前有 `min_similarity=0.3` 篩選。
-- 目前沒有 rerank，向量檢索後直接回傳來源。
+- `retrieve_chunks()` 使用固定 `top_k=5`
+- `min_similarity=0.3` 篩選
+- 沒有 rerank，向量檢索後直接回傳來源
 
 對應程式碼：
 
@@ -54,14 +54,6 @@ Rerank 是二次排序。
 3. 取前 k 筆送給 LLM
 
 它的價值是降低噪音，讓真正相關的 chunk 更靠前。
-
-## 目標實作（下一步）
-
-1. 在 `backend/config.py` 新增 RAG 參數。
-2. 在 `backend/services/retrieval.py` 改為 prefetch + finalize 流程。
-3. 實作 `choose_top_k(query, candidates)`，根據分數分布與 query 特徵回傳最終 `k`。
-4. 加入第一版 rerank（關鍵詞覆蓋、章節標題命中）。
-5. 增加檢索 log，記錄每題候選數、最終 k、平均相似度。
 
 ## 驗證方式
 
