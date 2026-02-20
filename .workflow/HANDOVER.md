@@ -5,37 +5,52 @@
 
 ## Current State
 
-- Phase 4 檢索品質提升已完成：三段式檢索（prefetch → heuristic rerank → dynamic top-k）。
-- RAG 參數全部可配置（config.py + .env）。
-- Citation 持久化已實作：sources 存入 messages JSONB 欄位，切換對話不會丟失引用。
-- System prompt 已強化引用格式規則，避免 LLM 搬用原文獻編號。
-- 所有教學文件已同步更新：概念說明、名詞表、Phase 主線、專題文件。
+Phase 1-4 核心實作全部完成。專案已具備完整的 RAG 聊天功能：文件上傳、三段式檢索、tool calling、citation 持久化。教學文件與學習總結已同步產出。
 
-## Done (recent)
+目前為 **功能穩定狀態**，後續擴充建議在新分支進行。
 
-- `backend/config.py`：新增 `rag_prefetch_k`, `rag_top_k_max`, `rag_top_k_min`, `rag_min_similarity`, `rag_similarity_drop_ratio`。
-- `backend/services/retrieval.py`：重寫為三段式（prefetch → heuristic_rerank → dynamic_topk），各階段 structured log。
-- `backend/agent/agent.py`：傳入 query_text 給 rerank；強化 system prompt 引用格式規則。
-- `backend/routes/chat.py`：收集 sources 並傳給 save_message 持久化。
-- `backend/services/chat.py`：save_message 支援 optional sources 參數。
-- `backend/llm/schemas.py`：MessageOut 加 sources 欄位。
-- `supabase/migrations/005_message_sources.sql`：messages 表加 sources JSONB。
-- 教學文件同步：`rag/01-concept.md`、`rag/03-document-pipeline.md`、`rag/04-retrieval-tuning.md`、`basic/06-phase-4-rag-chat-integration.md`、`basic/07-rag-glossary.md`、`.tutorial/README.md`。
+## Done (this session)
+
+- Phase 4 完成：三段式檢索 + citation 持久化 + system prompt 引用格式強化
+- 所有教學文件同步更新（basic 主線 + rag/backend/frontend/database 專題）
+- 學習總結文件產出：`.tutorial/rag/05-summary.md`
+- PROGRESS 修正：vector search function 標完成，全文搜索拆出為獨立項目
 
 ## In Progress
 
-- 離線題組驗證（10-20 題比較升級前後品質）尚未執行。
+無。Phase 1-4 主線已結束。
 
-## Next Actions
+## Roadmap -- 後續擴充
 
-1. 用固定題組做離線比較，確認 rerank + dynamic top-k 的品質提升。
-2. 評估是否需要中文斷詞（jieba）提升 heuristic rerank 對中文的效果。
-3. 實作 hybrid search：建立 full-text search index + 合併 vector + keyword 結果。
-4. 考慮後續擴充：Metadata Extraction、Sub-Agents、Web Search。
+### 第一優先：檢索品質量化與提升
+
+1. **離線評測題組** -- 固定 10-20 題，量化 rerank + dynamic top-k 的品質提升
+2. **Hybrid Search** -- 建立 tsvector index，合併 vector + keyword 結果
+3. **中文斷詞（jieba）** -- 提升 keyword coverage 對中文的效果
+
+### 第二優先：功能擴展
+
+4. **Metadata Extraction** -- 自動抽取文件標題、作者、日期
+5. **Sub-Agents** -- 拆分 retrieval / summarization / comparison 子任務
+6. **Web Search Tool** -- agent 可搜尋網路，補充本地文件
+
+### 第三優先：進階能力
+
+7. **Text-to-SQL** -- agent 查詢結構化資料
+8. **Rerank 模型替換** -- Cohere / Jina rerank 取代 heuristic
+9. **Observability** -- LangSmith / Phoenix 追蹤呼叫鏈
+10. **Multi-modal** -- 圖片 chunk 支援
+
+### 建議做法
+
+- 每個擴充項目在獨立分支開發
+- 完成後更新對應教學文件
+- 詳細規劃見 `.workflow/PROGRESS.md` 後續擴充區塊
 
 ## Reference Docs
 
 - `.workflow/PLAN.md`
 - `.workflow/PROGRESS.md`
-- `.tutorial/rag/04-retrieval-tuning.md`
-- `.tutorial/basic/07-rag-glossary.md`
+- `.tutorial/rag/05-summary.md` -- 專案學習總結
+- `.tutorial/rag/04-retrieval-tuning.md` -- 三段式檢索詳解
+- `.tutorial/basic/07-rag-glossary.md` -- RAG 名詞表

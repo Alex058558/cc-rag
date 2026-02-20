@@ -60,7 +60,8 @@
 - [x] Agent 核心 (tool calling loop)
 - [x] 聊天 API 整合 RAG
 - [x] Citation 持久化 (messages.sources JSONB, migration 005)
-- [ ] Supabase vector search function + 全文搜索 index
+- [x] Supabase vector search function (pgvector cosine similarity)
+- [ ] 全文搜索 index (tsvector + hybrid search)
 - [x] 前端引用來源顯示 (SourceCard / Citation popover)
 - [-] Phase 4 驗證：聊天引用文件、來源顯示（hybrid search 待補）
 
@@ -68,8 +69,21 @@
 
 ## 後續擴充（未開始）
 
-- [ ] Metadata Extraction
-- [ ] Sub-Agents
-- [ ] Web Search
-- [ ] Text-to-SQL
-- [ ] LangSmith Observability
+### 優先級 High -- 檢索品質直接提升
+
+- [ ] Hybrid Search -- 建立 tsvector index，合併 vector + keyword 結果，提升召回率
+- [ ] 中文斷詞（jieba）-- 改善 heuristic rerank 的 keyword coverage 對中文的效果
+- [ ] 離線評測題組 -- 固定 10-20 題比較檢索品質，量化調參效果
+
+### 優先級 Medium -- 功能擴展
+
+- [ ] Metadata Extraction -- 自動抽取文件標題、作者、日期等 metadata
+- [ ] Sub-Agents -- 拆分 retrieval / summarization / comparison 等子任務
+- [ ] Web Search Tool -- 讓 agent 可以搜尋網路資料，補充本地文件不足
+
+### 優先級 Low -- 進階能力
+
+- [ ] Text-to-SQL -- 讓 agent 查詢結構化資料
+- [ ] Rerank 模型替換 -- 換 Cohere / Jina rerank 模型取代 heuristic
+- [ ] LangSmith / Phoenix Observability -- 追蹤 retrieval + LLM 呼叫鏈
+- [ ] Multi-modal -- 支援圖片 chunk（Docling 已有基礎能力）

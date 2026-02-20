@@ -42,6 +42,7 @@
 | [02-sse-streaming.md](rag/02-sse-streaming.md) | SSE 實作（後端 StreamingResponse、前端 reader） |
 | [03-document-pipeline.md](rag/03-document-pipeline.md) | 管線全解（Docling、Schema、API、踩坑紀錄） |
 | [04-retrieval-tuning.md](rag/04-retrieval-tuning.md) | 三段式檢索實作（Prefetch、Heuristic Rerank、Dynamic Top-K）|
+| [05-summary.md](rag/05-summary.md) | 專案總結（學到的技術、踩坑紀錄、框架 vs 手刻比較）|
 
 ### backend/ — 後端技術
 
