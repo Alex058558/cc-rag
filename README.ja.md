@@ -11,6 +11,7 @@ CC-RAG は、RAG を実践的に学ぶためのフルスタックプロジェク
 - SSE ストリーミング付きチャット
 - ドキュメントのアップロードとバックグラウンド処理（Docling -> chunk -> embedding）
 - 三段階検索（Prefetch -> Heuristic Rerank -> Dynamic Top-K）
+- Hybrid Search（vector + full-text search + RRF）と純 vector へのフォールバック
 - 出典引用（`[1]`, `[2]`）とフロントエンドの popover プレビュー
 - 引用の永続化：出典がデータベースに保存され、会話を切り替えても維持される
 
@@ -48,6 +49,10 @@ RAG_TOP_K_MAX=5
 RAG_TOP_K_MIN=1
 RAG_MIN_SIMILARITY=0.3
 RAG_SIMILARITY_DROP_RATIO=0.6
+RAG_HYBRID_ENABLED=true
+RAG_RRF_K=60
+RAG_FULL_TEXT_WEIGHT=1.0
+RAG_SEMANTIC_WEIGHT=1.0
 ```
 
 | パラメータ | デフォルト | 説明 |
@@ -57,6 +62,10 @@ RAG_SIMILARITY_DROP_RATIO=0.6
 | `RAG_TOP_K_MIN` | 1 | LLM に渡す最小 chunk 数 |
 | `RAG_MIN_SIMILARITY` | 0.3 | cosine similarity がこの値未満の候補は除外 |
 | `RAG_SIMILARITY_DROP_RATIO` | 0.6 | 動的カットオフ：similarity が最高スコアにこの比率を掛けた値を下回ると切り捨て |
+| `RAG_HYBRID_ENABLED` | true | hybrid 検索を有効化するか |
+| `RAG_RRF_K` | 60 | RRF の平滑化定数 |
+| `RAG_FULL_TEXT_WEIGHT` | 1.0 | Full-text 分岐の重み |
+| `RAG_SEMANTIC_WEIGHT` | 1.0 | Vector 分岐の重み |
 
 チューニングのヒント：より正確な回答には `RAG_MIN_SIMILARITY` を上げるか `RAG_TOP_K_MAX` を下げてください。より高い再現率には `RAG_PREFETCH_K` を上げるか `RAG_SIMILARITY_DROP_RATIO` を下げてください。
 
@@ -77,6 +86,7 @@ Supabase SQL Editor で以下を順番に実行してください：
 3. `supabase/migrations/003_rls_policies.sql`
 4. `supabase/migrations/004_storage_bucket.sql`
 5. `supabase/migrations/005_message_sources.sql`
+6. `supabase/migrations/006_hybrid_search.sql`
 
 ### 3) バックエンド起動
 

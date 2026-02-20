@@ -17,6 +17,10 @@ class Settings(BaseSettings):
     rag_top_k_min: int = 1
     rag_min_similarity: float = 0.3
     rag_similarity_drop_ratio: float = 0.6
+    rag_hybrid_enabled: bool = True
+    rag_rrf_k: int = 60
+    rag_full_text_weight: float = 1.0
+    rag_semantic_weight: float = 1.0
 
     model_config = {"env_file": "backend/.env", "env_file_encoding": "utf-8", "extra": "ignore"}
 

@@ -18,7 +18,7 @@
 
 ### 路線 B：按技術主題（已有基礎）
 
-直接跳到你想深入的領域。
+直接跳到想深入的領域。
 
 ## 目錄索引
 
@@ -43,6 +43,9 @@
 | [03-document-pipeline.md](rag/03-document-pipeline.md) | 管線全解（Docling、Schema、API、踩坑紀錄） |
 | [04-retrieval-tuning.md](rag/04-retrieval-tuning.md) | 三段式檢索實作（Prefetch、Heuristic Rerank、Dynamic Top-K）|
 | [05-summary.md](rag/05-summary.md) | 專案總結（學到的技術、踩坑紀錄、框架 vs 手刻比較）|
+| [06-hybrid-search.md](rag/06-hybrid-search.md) | Hybrid Search（vector + full-text + RRF）實作與調參 |
+| [07-evaluation-and-qa-pairs.md](rag/07-evaluation-and-qa-pairs.md) | 評測入門（QA Pair、Hit@k、Recall@k） |
+| [08-domain-knowledge-quick-map.md](rag/08-domain-knowledge-quick-map.md) | RAG 領域知識速讀地圖（快速複習） |
 
 ### backend/ — 後端技術
 

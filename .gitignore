@@ -28,3 +28,6 @@ Thumbs.db
 .vscode/
 .idea/
 *.sw?
+
+# Internal workflow docs
+.workflow/

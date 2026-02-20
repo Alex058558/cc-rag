@@ -1,5 +1,6 @@
 import logging
 import re
+from typing import Any, cast
 
 from supabase import Client
 
@@ -21,19 +22,28 @@ def retrieve_chunks(
     settings = get_settings()
 
     # Stage 1: prefetch — 多撈一些候選
-    candidates = _prefetch(
+    candidates, mode = _prefetch(
         admin_db,
         user_id,
         query_embedding,
+        query_text=query_text,
         prefetch_k=settings.rag_prefetch_k,
         min_similarity=settings.rag_min_similarity,
+        hybrid_enabled=settings.rag_hybrid_enabled,
+        rrf_k=settings.rag_rrf_k,
+        full_text_weight=settings.rag_full_text_weight,
+        semantic_weight=settings.rag_semantic_weight,
     )
     if not candidates:
-        logger.info("[retrieval] no candidates above min_similarity=%.2f", settings.rag_min_similarity)
+        if mode == "hybrid":
+            logger.info("[retrieval][hybrid] no candidates")
+        else:
+            logger.info("[retrieval][vector] no candidates above min_similarity=%.2f", settings.rag_min_similarity)
         return []
 
     logger.info(
-        "[retrieval] prefetch: %d candidates (sim range %.3f ~ %.3f)",
+        "[retrieval][%s] prefetch: %d candidates (score range %.3f ~ %.3f)",
+        mode,
         len(candidates),
         candidates[-1].get("similarity", 0),
         candidates[0].get("similarity", 0),
@@ -54,7 +64,7 @@ def retrieve_chunks(
     # 補上 filename
     _attach_filenames(admin_db, results)
 
-    logger.info("[retrieval] final: %d chunks returned", len(results))
+    logger.info("[retrieval][%s] final: %d chunks returned", mode, len(results))
     return results
 
 
@@ -78,9 +88,30 @@ def _prefetch(
     admin_db: Client,
     user_id: str,
     query_embedding: list[float],
+    query_text: str,
     prefetch_k: int,
     min_similarity: float,
-) -> list[dict]:
+    hybrid_enabled: bool,
+    rrf_k: int,
+    full_text_weight: float,
+    semantic_weight: float,
+) -> tuple[list[dict], str]:
+    if hybrid_enabled and query_text.strip():
+        result = admin_db.rpc(
+            "hybrid_search",
+            {
+                "query_text": query_text,
+                "query_embedding": query_embedding,
+                "match_count": prefetch_k,
+                "filter_user_id": user_id,
+                "rrf_k": rrf_k,
+                "full_text_weight": full_text_weight,
+                "semantic_weight": semantic_weight,
+            },
+        ).execute()
+        hybrid_candidates = cast(list[dict[str, Any]], result.data or [])
+        return hybrid_candidates, "hybrid"
+
     result = admin_db.rpc(
         "match_documents",
         {
@@ -90,7 +121,9 @@ def _prefetch(
         },
     ).execute()
 
-    return [c for c in result.data if (c.get("similarity") or 0) >= min_similarity]
+    vector_candidates = cast(list[dict[str, Any]], result.data or [])
+    candidates = [c for c in vector_candidates if (c.get("similarity") or 0) >= min_similarity]
+    return candidates, "vector"
 
 
 # ---------------------------------------------------------------------------
@@ -187,6 +220,7 @@ def _attach_filenames(admin_db: Client, chunks: list[dict]) -> None:
         return
     doc_ids = list({c["document_id"] for c in chunks})
     docs = admin_db.table("documents").select("id, filename").in_("id", doc_ids).execute()
-    filename_map = {d["id"]: d["filename"] for d in docs.data}
+    doc_rows = cast(list[dict[str, Any]], docs.data or [])
+    filename_map = {d["id"]: d["filename"] for d in doc_rows}
     for chunk in chunks:
         chunk["filename"] = filename_map.get(chunk["document_id"], "Unknown")

@@ -1,0 +1,106 @@
+dataset: piano-training-v1
+source_document_label: "鋼琴訓練的深層影響.pdf"
+version: 1
+notes: "最小評測集（10 題）。expected_evidence 用段落線索，後續可替換成 chunk_id。"
+
+questions:
+  - id: q01
+    query: "文中提到鋼琴訓練會讓胼胝體前部變大，這對雙手協調有什麼作用？"
+    query_type: keyword
+    expected_evidence:
+      - "II.B 白質轉化：胼胝體前部較大、支持雙手複雜運動序列"
+      - "III.B 強化神經通路與半球間對話"
+    expected_answer_points:
+      - "胼胝體是左右半球溝通橋樑"
+      - "可提升半球間訊息整合效率"
+      - "改善雙手不同節奏/力度的協調"
+
+  - id: q02
+    query: "為什麼長期學鋼琴的人通常在注意力、記憶和動作協調上表現更好？"
+    query_type: semantic
+    expected_evidence:
+      - "IV.A 執行功能、注意力與認知控制"
+      - "IV.B 記憶系統與學習能力"
+      - "II.A/II.B 灰質與白質可塑性"
+    expected_answer_points:
+      - "多系統訓練觸發神經可塑性"
+      - "前額葉、海馬迴、感覺運動網路強化"
+      - "白質通路提升訊息傳遞效率"
+
+  - id: q03
+    query: "文中對『7歲前開始訓練』的說法是什麼？為什麼會有差異？"
+    query_type: keyword
+    expected_evidence:
+      - "V.A 起始年齡的關鍵作用"
+      - "II.B 胼胝體早期訓練者較大"
+    expected_answer_points:
+      - "早期訓練通常伴隨更顯著神經變化"
+      - "與發展敏感期可塑性較高有關"
+
+  - id: q04
+    query: "鋼琴訓練造成灰質增加與灰質減少看起來矛盾，文中如何解釋？"
+    query_type: semantic
+    expected_evidence:
+      - "II.A 灰質適應：增加與減少並存"
+      - "技能自動化與神經效率提升"
+    expected_answer_points:
+      - "增加代表資源招募"
+      - "減少可能代表網路精煉與效率化"
+
+  - id: q05
+    query: "請列出文中提到的三條白質通路，並說明各自關聯功能。"
+    query_type: keyword
+    expected_evidence:
+      - "II.B 穹窿、上縱束、內囊、弓狀束"
+    expected_answer_points:
+      - "至少正確說出三條通路"
+      - "功能對應需合理（記憶/感覺運動整合/運動傳輸/聽覺-運動）"
+
+  - id: q06
+    query: "fMRI 與 EEG 的結果在『技能熟練後大腦如何改變』這件事上，是否一致？"
+    query_type: semantic
+    expected_evidence:
+      - "III.A fMRI：部分區域激活下降（效率提升）"
+      - "III.A EEG：特定頻段連結更強、更特化"
+    expected_answer_points:
+      - "兩者不衝突，分別反映效率化與網路特化"
+
+  - id: q07
+    query: "鋼琴家和弦樂演奏者相比，在雙手協調相關神經指標有何差異？"
+    query_type: keyword
+    expected_evidence:
+      - "III.C 鋼琴家 vs 弦樂演奏家比較"
+      - "額頂 theta 連結、反應時間與準確率差異"
+    expected_answer_points:
+      - "鋼琴家在雙手任務表現通常更快更準"
+      - "theta 功率與額頂連結更強"
+
+  - id: q08
+    query: "文中如何說明鋼琴訓練對健康老化與失智風險的意義？"
+    query_type: semantic
+    expected_evidence:
+      - "VI.A 認知儲備與健康老齡化"
+      - "II.B/IV 記憶與白質穩定"
+    expected_answer_points:
+      - "可能延緩認知衰退"
+      - "與認知儲備和記憶網路保護有關"
+
+  - id: q09
+    query: "如果要把這份研究用在 ADHD 族群，文中提到哪些可能機制？"
+    query_type: keyword
+    expected_evidence:
+      - "VI.B 在神經發展狀況中的潛在益處（ADHD）"
+    expected_answer_points:
+      - "前額葉與小腦相關迴路可能受益"
+      - "執行功能、注意力、處理速度改善"
+
+  - id: q10
+    query: "文末建議未來研究方向有哪些？請至少列四點。"
+    query_type: keyword
+    expected_evidence:
+      - "VII 結論：未來研究方向清單"
+    expected_answer_points:
+      - "縱向研究"
+      - "機制理解"
+      - "比較性多樂器研究"
+      - "治療優化（RCT）"

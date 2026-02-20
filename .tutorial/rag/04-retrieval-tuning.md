@@ -1,8 +1,8 @@
-# 檢索調參：動態 Top-K 與 Heuristic Rerank
+# 檢索調參：三段式檢索與 Hybrid 模式
 
 ## 這份文件在講什麼
 
-說明專案目前的三段式檢索流程：prefetch、heuristic rerank、dynamic top-k，以及各階段的設定參數。
+說明專案目前的檢索流程：Hybrid/Vector prefetch、heuristic rerank、dynamic top-k，以及各階段設定參數。
 
 ## 檢索流程總覽
 
@@ -12,8 +12,9 @@
 Embedding (Gemini text-embedding-004)
   ↓
 Stage 1: Prefetch
-  用 pgvector 撈 prefetch_k 筆候選（預設 15）
-  過濾掉 similarity < min_similarity 的
+  Hybrid 開啟且有 query_text：走 hybrid_search（RRF 分數）
+  否則走 match_documents（pgvector cosine similarity）
+  Vector 模式才套 min_similarity
   ↓
 Stage 2: Heuristic Rerank
   用 query 原文做關鍵詞覆蓋 + 結構特徵重排
@@ -36,6 +37,10 @@ Stage 3: Dynamic Top-K
 | `rag_top_k_max` | 5 | 最終最多回幾筆 |
 | `rag_top_k_min` | 1 | 最終最少回幾筆 |
 | `rag_similarity_drop_ratio` | 0.6 | Dynamic top-k 截斷比例（低於最高分 * 此值就砍） |
+| `rag_hybrid_enabled` | true | 是否啟用 hybrid search |
+| `rag_rrf_k` | 60 | RRF 平滑常數 |
+| `rag_full_text_weight` | 1.0 | Full-text 分支權重 |
+| `rag_semantic_weight` | 1.0 | Vector 分支權重 |
 
 ## Stage 2: Heuristic Rerank 細節
 
@@ -45,7 +50,7 @@ Stage 3: Dynamic Top-K
 final_score = similarity * 0.7 + keyword_coverage * 0.25 + structure_bonus
 ```
 
-- `similarity` — pgvector cosine similarity（0~1）
+- `similarity` — vector 模式是 cosine；hybrid 模式是 RRF score
 - `keyword_coverage` — query 關鍵詞在 chunk 中的出現比例（0~1）
 - `structure_bonus` — chunk 開頭是 markdown heading 的話 +0.05
 
@@ -86,4 +91,8 @@ final_score = similarity * 0.7 + keyword_coverage * 0.25 + structure_bonus
 
 - 換成專業 rerank 模型（Cohere Rerank、Jina Rerank）— 只需替換 `heuristic_rerank` 函式
 - 加入中文斷詞（jieba）提升 keyword coverage 對中文的效果
-- Hybrid search（pgvector + full-text search）進一步提升召回率
+- Hybrid 權重自動調參（依 query 類型動態調整 lexical/semantic 比重）
+
+## 相關延伸
+
+- [06-hybrid-search.md](06-hybrid-search.md) -- Hybrid Search SQL 與參數設計

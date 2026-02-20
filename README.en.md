@@ -11,6 +11,7 @@ CC-RAG is a full-stack project for hands-on RAG practice: upload documents, run 
 - Chat with SSE streaming responses
 - Document upload and background processing (Docling -> chunk -> embedding)
 - Three-stage retrieval (Prefetch -> Heuristic Rerank -> Dynamic Top-K)
+- Hybrid search (vector + full-text search + RRF) with vector-only fallback
 - Source citations (`[1]`, `[2]`) with frontend popover preview
 - Citation persistence: sources saved to database, preserved across conversation switches
 
@@ -48,6 +49,10 @@ RAG_TOP_K_MAX=5
 RAG_TOP_K_MIN=1
 RAG_MIN_SIMILARITY=0.3
 RAG_SIMILARITY_DROP_RATIO=0.6
+RAG_HYBRID_ENABLED=true
+RAG_RRF_K=60
+RAG_FULL_TEXT_WEIGHT=1.0
+RAG_SEMANTIC_WEIGHT=1.0
 ```
 
 | Parameter | Default | Description |
@@ -57,6 +62,10 @@ RAG_SIMILARITY_DROP_RATIO=0.6
 | `RAG_TOP_K_MIN` | 1 | Minimum number of chunks returned to the LLM |
 | `RAG_MIN_SIMILARITY` | 0.3 | Candidates below this cosine similarity are discarded |
 | `RAG_SIMILARITY_DROP_RATIO` | 0.6 | Dynamic cutoff: chunks are trimmed when similarity drops below top score multiplied by this ratio |
+| `RAG_HYBRID_ENABLED` | true | Enable hybrid retrieval mode |
+| `RAG_RRF_K` | 60 | RRF smoothing constant |
+| `RAG_FULL_TEXT_WEIGHT` | 1.0 | Full-text branch weight |
+| `RAG_SEMANTIC_WEIGHT` | 1.0 | Vector branch weight |
 
 Tuning tips: for more precise answers, raise `RAG_MIN_SIMILARITY` or lower `RAG_TOP_K_MAX`; for higher recall, raise `RAG_PREFETCH_K` or lower `RAG_SIMILARITY_DROP_RATIO`.
 
@@ -77,6 +86,7 @@ Run these in Supabase SQL Editor in order:
 3. `supabase/migrations/003_rls_policies.sql`
 4. `supabase/migrations/004_storage_bucket.sql`
 5. `supabase/migrations/005_message_sources.sql`
+6. `supabase/migrations/006_hybrid_search.sql`
 
 ### 3) Start backend
 

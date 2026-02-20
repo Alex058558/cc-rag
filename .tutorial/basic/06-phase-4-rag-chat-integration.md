@@ -18,7 +18,7 @@ Phase 4 是把「文件知識」接進聊天：
 
 - `backend/agent/tools.py`：`retrieve_documents` tool 定義
 - `backend/agent/agent.py`：tool calling + context 組裝 + token stream
-- `backend/services/retrieval.py`：向量檢索與相似度過濾
+- `backend/services/retrieval.py`：Hybrid/Vector 檢索、heuristic rerank、dynamic top-k
 - `backend/routes/chat.py`：SSE 事件整合（`sources` + `token`）
 
 ### 前端
@@ -78,9 +78,9 @@ data: [DONE]
 
 ## 目前限制與下一步
 
-- Hybrid search（pgvector + full-text search）尚未實作
 - 中文斷詞（jieba）可提升 heuristic rerank 效果
 - 離線題組驗證尚未執行
+- Hybrid 權重（RRF）仍需依資料集調參
 
 ## 完成判定
 

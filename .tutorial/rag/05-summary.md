@@ -51,7 +51,7 @@ CC-RAG 是一個從零開始實作的 RAG（Retrieval-Augmented Generation）聊
 ### Phase 4：RAG 檢索 + 聊天整合
 
 - **Tool Calling** -- LLM 決定要不要查資料、查什麼，不是每次都查
-- **三段式檢索** -- prefetch 多撈 → heuristic rerank 重排 → dynamic top-k 截斷
+- **三段式檢索 + Hybrid prefetch** -- prefetch 支援 vector/full-text 融合，再做 rerank 與 dynamic top-k
 - **Heuristic Rerank** -- 不用外部模型，用 similarity + keyword coverage + structure bonus
 - **Dynamic Top-K** -- 根據分數分佈自動決定回幾筆，不寫死
 - **Citation 持久化** -- sources 存 JSONB，切換對話不丟引用
@@ -77,7 +77,7 @@ Storage object key 只接受 ASCII。解法：key 用 `{hash}{ext}`，原始檔�
 
 ### 5. pgvector cosine similarity 不是萬能的
 
-純向量搜尋對關鍵詞匹配不敏感。加 heuristic rerank 的 keyword coverage 之後，特定問題的檢索品質明顯提升。
+純向量搜尋對關鍵詞匹配不敏感。最終版本改為 Hybrid Search（vector + full-text + RRF），再搭配 heuristic rerank，對精確術語與自然語句都更穩。
 
 ## 自己做 vs 用框架：什麼時候該選哪個
 
@@ -115,3 +115,4 @@ Storage object key 只接受 ASCII。解法：key 用 `{hash}{ext}`，原始檔�
 - [02-sse-streaming.md](02-sse-streaming.md) -- SSE 串流實作
 - [03-document-pipeline.md](03-document-pipeline.md) -- 文件處理管線
 - [04-retrieval-tuning.md](04-retrieval-tuning.md) -- 三段式檢索調參
+- [06-hybrid-search.md](06-hybrid-search.md) -- Hybrid Search 實作
