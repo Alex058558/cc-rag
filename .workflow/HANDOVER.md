@@ -1,37 +1,41 @@
 # HANDOVER
 
-> Updated: 2026-02-19 17:10
+> Updated: 2026-02-20
 > Branch: main
 
 ## Current State
 
-- Phase 4 已進入可用版本：聊天可檢索文件並回傳引用來源。
-- 前端 citation 顯示已修正重複渲染問題，popover 可顯示完整 chunk 並補充引用關聯文字。
-- frontend build 先前失敗的未使用變數已修正。
+- Phase 4 檢索品質提升已完成：三段式檢索（prefetch → heuristic rerank → dynamic top-k）。
+- RAG 參數全部可配置（config.py + .env）。
+- Citation 持久化已實作：sources 存入 messages JSONB 欄位，切換對話不會丟失引用。
+- System prompt 已強化引用格式規則，避免 LLM 搬用原文獻編號。
+- 所有教學文件已同步更新：概念說明、名詞表、Phase 主線、專題文件。
 
 ## Done (recent)
 
-- `backend/services/retrieval.py`：已支援向量檢索 + `top_k=5` + `min_similarity=0.3` 篩選。
-- `backend/agent/tools.py`：已定義 `retrieve_documents` tool。
-- `backend/agent/agent.py`：已整合 tool calling 與來源回傳 (`sources` 事件)。
-- `backend/routes/chat.py`：SSE 已串接 `sources` 與 `token` 事件。
-- `frontend/src/components/chat/MessageList.tsx`：citation 解析改為逐一標記解析，避免 `[n]` 重複輸出。
-- `frontend/src/components/chat/Citation.tsx`：popover 改為完整 chunk 可捲動顯示，並加入 `Referenced answer text`。
-- `frontend/src/hooks/useChat.ts`、`frontend/src/pages/ChatPage.tsx`：移除未使用變數，恢復 build 可通過。
+- `backend/config.py`：新增 `rag_prefetch_k`, `rag_top_k_max`, `rag_top_k_min`, `rag_min_similarity`, `rag_similarity_drop_ratio`。
+- `backend/services/retrieval.py`：重寫為三段式（prefetch → heuristic_rerank → dynamic_topk），各階段 structured log。
+- `backend/agent/agent.py`：傳入 query_text 給 rerank；強化 system prompt 引用格式規則。
+- `backend/routes/chat.py`：收集 sources 並傳給 save_message 持久化。
+- `backend/services/chat.py`：save_message 支援 optional sources 參數。
+- `backend/llm/schemas.py`：MessageOut 加 sources 欄位。
+- `supabase/migrations/005_message_sources.sql`：messages 表加 sources JSONB。
+- 教學文件同步：`rag/01-concept.md`、`rag/03-document-pipeline.md`、`rag/04-retrieval-tuning.md`、`basic/06-phase-4-rag-chat-integration.md`、`basic/07-rag-glossary.md`、`.tutorial/README.md`。
 
 ## In Progress
 
-- 檢索策略仍為固定 `top_k`，尚未加入動態 Top-K 與 rerank。
-- 尚未建立檢索品質觀測（例如命中率、引用對齊率、每題來源數）。
+- 離線題組驗證（10-20 題比較升級前後品質）尚未執行。
 
 ## Next Actions
 
-1. 在 `backend/config.py` 增加 RAG 參數（`rag_top_k_*`、`rag_prefetch_k`、`rag_min_similarity`），改為可配置。
-2. 在 `backend/services/retrieval.py` 增加兩段式流程：先 prefetch 候選，再依規則動態決定最終 `k`。
-3. 新增簡易 rerank（關鍵詞覆蓋 + 結構命中）與檢索 log，完成後用 10-20 題做離線比較。
+1. 用固定題組做離線比較，確認 rerank + dynamic top-k 的品質提升。
+2. 評估是否需要中文斷詞（jieba）提升 heuristic rerank 對中文的效果。
+3. 實作 hybrid search：建立 full-text search index + 合併 vector + keyword 結果。
+4. 考慮後續擴充：Metadata Extraction、Sub-Agents、Web Search。
 
 ## Reference Docs
 
 - `.workflow/PLAN.md`
 - `.workflow/PROGRESS.md`
 - `.tutorial/rag/04-retrieval-tuning.md`
+- `.tutorial/basic/07-rag-glossary.md`

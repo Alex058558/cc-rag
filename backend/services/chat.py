@@ -35,20 +35,22 @@ async def get_or_create_conversation(
 
 
 async def save_message(
-    db: Client, conversation_id: str, user_id: str, role: str, content: str
+    db: Client,
+    conversation_id: str,
+    user_id: str,
+    role: str,
+    content: str,
+    sources: list[dict] | None = None,
 ) -> dict:
-    result = (
-        db.table("messages")
-        .insert(
-            {
-                "conversation_id": conversation_id,
-                "user_id": user_id,
-                "role": role,
-                "content": content,
-            }
-        )
-        .execute()
-    )
+    row: dict = {
+        "conversation_id": conversation_id,
+        "user_id": user_id,
+        "role": role,
+        "content": content,
+    }
+    if sources:
+        row["sources"] = sources
+    result = db.table("messages").insert(row).execute()
     return result.data[0]
 
 

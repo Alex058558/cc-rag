@@ -1,59 +1,77 @@
-# 檢索調參：動態 Top-K 與 Rerank
+# 檢索調參：動態 Top-K 與 Heuristic Rerank
 
 ## 這份文件在講什麼
 
-解釋目前專案的檢索行為、為什麼固定 Top-K 不夠用，以及動態 Top-K 和 Rerank 的概念。
+說明專案目前的三段式檢索流程：prefetch、heuristic rerank、dynamic top-k，以及各階段的設定參數。
 
-## 目前狀態
+## 檢索流程總覽
 
-- `retrieve_chunks()` 使用固定 `top_k=5`
-- `min_similarity=0.3` 篩選
-- 沒有 rerank，向量檢索後直接回傳來源
+```
+使用者提問
+  ↓
+Embedding (Gemini text-embedding-004)
+  ↓
+Stage 1: Prefetch
+  用 pgvector 撈 prefetch_k 筆候選（預設 15）
+  過濾掉 similarity < min_similarity 的
+  ↓
+Stage 2: Heuristic Rerank
+  用 query 原文做關鍵詞覆蓋 + 結構特徵重排
+  ↓
+Stage 3: Dynamic Top-K
+  從第 1 名往下看，similarity 掉太多就截斷
+  最終回傳 top_k_min ~ top_k_max 筆
+  ↓
+送進 LLM（附帶 [1][2] 引用標記）
+```
 
-對應程式碼：
+## 設定參數
 
-- `backend/services/retrieval.py`
-- `backend/agent/agent.py`
+所有參數在 `backend/config.py` 的 `Settings` class，可透過 `.env` 覆蓋：
 
-## 為什麼要做動態 Top-K
+| 參數 | 預設值 | 說明 |
+|------|--------|------|
+| `rag_prefetch_k` | 15 | Stage 1 撈多少候選 |
+| `rag_min_similarity` | 0.3 | 最低 cosine similarity 門檻 |
+| `rag_top_k_max` | 5 | 最終最多回幾筆 |
+| `rag_top_k_min` | 1 | 最終最少回幾筆 |
+| `rag_similarity_drop_ratio` | 0.6 | Dynamic top-k 截斷比例（低於最高分 * 此值就砍） |
 
-固定 `top_k` 對不同問題不一定合適：
+## Stage 2: Heuristic Rerank 細節
 
-- 問題單純時，k 太大會帶入噪音。
-- 問題需要跨章節整合時，k 太小會漏掉關鍵段落。
+綜合分數公式：
 
-動態 Top-K 的目標是讓每題用最適合的來源數量，而不是一律固定值。
+```
+final_score = similarity * 0.7 + keyword_coverage * 0.25 + structure_bonus
+```
 
-## 什麼是「可配置動態 Top-K」
+- `similarity` — pgvector cosine similarity（0~1）
+- `keyword_coverage` — query 關鍵詞在 chunk 中的出現比例（0~1）
+- `structure_bonus` — chunk 開頭是 markdown heading 的話 +0.05
 
-### 可配置（Configurable）
+關鍵詞抽取用簡易斷詞：去掉停用詞，保留 2 字以上的 token。中文因為沒有空白分詞，效果有限，主要靠 similarity 主導排序。
 
-把參數放進設定，不把數字寫死在程式：
+## Stage 3: Dynamic Top-K 細節
 
-- `RAG_TOP_K_DEFAULT`
-- `RAG_TOP_K_MIN`
-- `RAG_TOP_K_MAX`
-- `RAG_PREFETCH_K`
-- `RAG_MIN_SIMILARITY`
+邏輯：
 
-### 動態（Dynamic）
+1. 一定取前 `top_k_min` 筆
+2. 從第 `top_k_min + 1` 筆開始，如果 `sim >= top_sim * drop_ratio` 就繼續收
+3. 一旦低於門檻或到達 `top_k_max` 就停止
 
-每次 query 根據候選分數與問題型態決定最終 `k`：
+效果：問題明確時只回 1~2 筆精準結果，問題模糊或跨章節時回到 5 筆。
 
-- 分數頭部集中 -> 較小 k（更精準）
-- 分數分散、跨主題 -> 較大 k（提高召回）
+## Citation 持久化
 
-## Rerank 是什麼
+助手訊息的引用來源會存入 `messages.sources` JSONB 欄位（migration: `005_message_sources.sql`），切換對話再回來時 citation 仍可正常顯示。
 
-Rerank 是二次排序。
+## 對應程式碼
 
-流程是：
-
-1. 先用向量檢索抓一批候選（例如 12 筆）
-2. 用額外規則或模型重排候選
-3. 取前 k 筆送給 LLM
-
-它的價值是降低噪音，讓真正相關的 chunk 更靠前。
+- `backend/config.py` — RAG 參數定義
+- `backend/services/retrieval.py` — 三段式檢索
+- `backend/agent/agent.py` — agent tool calling + citation prompt
+- `backend/routes/chat.py` — sources 持久化
+- `supabase/migrations/005_message_sources.sql` — messages 表加 sources 欄位
 
 ## 驗證方式
 
@@ -64,6 +82,8 @@ Rerank 是二次排序。
 - 每題引用數是否更穩定
 - 回答延遲是否可接受
 
-## 與目前引用顯示修正的關係
+## 未來可升級方向
 
-前端已修正 citation 重複與截斷問題。接下來做動態 Top-K / rerank 後，會再提高「引用內容與回答文字」的一致性。
+- 換成專業 rerank 模型（Cohere Rerank、Jina Rerank）— 只需替換 `heuristic_rerank` 函式
+- 加入中文斷詞（jieba）提升 keyword coverage 對中文的效果
+- Hybrid search（pgvector + full-text search）進一步提升召回率

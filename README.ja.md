@@ -10,8 +10,9 @@ CC-RAG は、RAG を実践的に学ぶためのフルスタックプロジェク
 
 - SSE ストリーミング付きチャット
 - ドキュメントのアップロードとバックグラウンド処理（Docling -> chunk -> embedding）
-- Supabase pgvector 検索
+- 三段階検索（Prefetch -> Heuristic Rerank -> Dynamic Top-K）
 - 出典引用（`[1]`, `[2]`）とフロントエンドの popover プレビュー
+- 引用の永続化：出典がデータベースに保存され、会話を切り替えても維持される
 
 ## 技術スタック
 
@@ -27,7 +28,7 @@ CC-RAG は、RAG を実践的に学ぶためのフルスタックプロジェク
 
 ### 1) 環境変数を準備
 
-このリポジトリには現在 `backend/.env.example` がないため、`backend/.env` を手動で作成してください。
+`backend/.env` を作成してください：
 
 ```env
 SUPABASE_URL=
@@ -39,6 +40,26 @@ EMBEDDING_MODEL=text-embedding-004
 FRONTEND_URL=http://localhost:5173
 ```
 
+以下の RAG パラメータにはデフォルト値があり、必要に応じて上書きできます：
+
+```env
+RAG_PREFETCH_K=15
+RAG_TOP_K_MAX=5
+RAG_TOP_K_MIN=1
+RAG_MIN_SIMILARITY=0.3
+RAG_SIMILARITY_DROP_RATIO=0.6
+```
+
+| パラメータ | デフォルト | 説明 |
+|------------|-----------|------|
+| `RAG_PREFETCH_K` | 15 | 第一段階で pgvector から取得する候補 chunk 数 |
+| `RAG_TOP_K_MAX` | 5 | LLM に渡す最大 chunk 数 |
+| `RAG_TOP_K_MIN` | 1 | LLM に渡す最小 chunk 数 |
+| `RAG_MIN_SIMILARITY` | 0.3 | cosine similarity がこの値未満の候補は除外 |
+| `RAG_SIMILARITY_DROP_RATIO` | 0.6 | 動的カットオフ：similarity が最高スコアにこの比率を掛けた値を下回ると切り捨て |
+
+チューニングのヒント：より正確な回答には `RAG_MIN_SIMILARITY` を上げるか `RAG_TOP_K_MAX` を下げてください。より高い再現率には `RAG_PREFETCH_K` を上げるか `RAG_SIMILARITY_DROP_RATIO` を下げてください。
+
 フロントエンドの `frontend/.env`:
 
 ```env
@@ -49,12 +70,13 @@ VITE_API_URL=http://localhost:8000
 
 ### 2) Supabase migrations を適用
 
-Supabase SQL Editor で以下を順番に実行してください。
+Supabase SQL Editor で以下を順番に実行してください：
 
 1. `supabase/migrations/001_initial_schema.sql`
 2. `supabase/migrations/002_vector_search.sql`
 3. `supabase/migrations/003_rls_policies.sql`
 4. `supabase/migrations/004_storage_bucket.sql`
+5. `supabase/migrations/005_message_sources.sql`
 
 ### 3) バックエンド起動
 

@@ -49,22 +49,47 @@ RAG 把「可查證的內容」放進提示詞，讓回答更可追溯。
 
 檢索取前 K 筆。K 太小可能漏資料，K 太大可能引入雜訊。
 
-### 5) Citation
+### 5) Prefetch
+
+在最終取 Top-K 之前，先多撈一批候選（例如 15 筆），給後續的 rerank 和動態裁切更多素材可選。
+
+就像考試閱卷：不是只看前 5 份，而是先粗看 15 份，再從裡面精選最好的。
+
+### 6) Rerank
+
+二次排序。向量檢索的結果不一定完美，rerank 用額外規則（或模型）重新打分排序。
+
+本專案用 **heuristic rerank**：以 vector similarity 為主（70%），加上關鍵詞覆蓋率（25%）和結構特徵加分（5%），不需要外部模型。
+
+### 7) Dynamic Top-K
+
+不固定取幾筆，而是根據候選分數分佈動態決定。如果前幾筆分數很集中、後面突然掉很多，就自動截斷，避免引入低品質來源。
+
+### 8) Citation
 
 回答中的 `[1]`、`[2]`。數字對應到檢索來源清單索引。
 
+引用來源會存入資料庫（`messages.sources` JSONB），切換對話再回來時仍可正常顯示。
+
 ## 你專案目前設定（2026-02）
 
-- 檢索：`top_k=5`
-- 門檻：`min_similarity=0.3`
+- 檢索流程：三段式（Prefetch → Heuristic Rerank → Dynamic Top-K）
+- Prefetch：`rag_prefetch_k=15`
+- 最終回傳：`rag_top_k_min=1` ~ `rag_top_k_max=5`
+- 門檻：`rag_min_similarity=0.3`
+- 動態截斷：`rag_similarity_drop_ratio=0.6`（低於最高分 * 0.6 就砍）
 - Embedding 維度：`vector(768)`
 - Embedding 模型：`text-embedding-004`
 
+所有 RAG 參數可透過 `.env` 覆蓋，定義在 `backend/config.py`。
+
 對應檔案：
 
-- `backend/services/retrieval.py`
-- `backend/services/embedding.py`
-- `supabase/migrations/002_vector_search.sql`
+- `backend/config.py` — RAG 參數
+- `backend/services/retrieval.py` — 三段式檢索
+- `backend/services/embedding.py` — 向量化
+- `supabase/migrations/002_vector_search.sql` — pgvector search function
+- `supabase/migrations/005_message_sources.sql` — citation 持久化
 
 ## 一個實例
 

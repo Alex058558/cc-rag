@@ -10,8 +10,9 @@ CC-RAG 是一個用來練習 RAG 的全端專案：上傳文件、做向量檢�
 
 - 聊天 + SSE 串流回覆
 - 文件上傳與背景處理（Docling -> chunk -> embedding）
-- Supabase pgvector 檢索
+- 三段式檢索（Prefetch -> Heuristic Rerank -> Dynamic Top-K）
 - 回答引用來源（`[1]`, `[2]`）與前端 popover 預覽
+- Citation 持久化：引用來源存入資料庫，切換對話不遺失
 
 ## 技術堆疊
 
@@ -27,7 +28,7 @@ CC-RAG 是一個用來練習 RAG 的全端專案：上傳文件、做向量檢�
 
 ### 1) 準備環境變數
 
-這個 repo 目前沒有 `backend/.env.example`，請手動建立 `backend/.env`：
+建立 `backend/.env`：
 
 ```env
 SUPABASE_URL=
@@ -38,6 +39,26 @@ GEMINI_MODEL=gemini-2.0-flash
 EMBEDDING_MODEL=text-embedding-004
 FRONTEND_URL=http://localhost:5173
 ```
+
+以下 RAG 參數有預設值，可視需要覆蓋：
+
+```env
+RAG_PREFETCH_K=15
+RAG_TOP_K_MAX=5
+RAG_TOP_K_MIN=1
+RAG_MIN_SIMILARITY=0.3
+RAG_SIMILARITY_DROP_RATIO=0.6
+```
+
+| 參數 | 預設值 | 說明 |
+|------|--------|------|
+| `RAG_PREFETCH_K` | 15 | 第一階段從 pgvector 撈多少候選 chunk |
+| `RAG_TOP_K_MAX` | 5 | 最終回傳的最大 chunk 數 |
+| `RAG_TOP_K_MIN` | 1 | 最終回傳的最小 chunk 數 |
+| `RAG_MIN_SIMILARITY` | 0.3 | cosine similarity 低於此值的候選直接丟棄 |
+| `RAG_SIMILARITY_DROP_RATIO` | 0.6 | 動態裁切比例：當 chunk 的 similarity 低於最高分乘以此值時截斷 |
+
+調參建議：想要更精準的回答，調高 `RAG_MIN_SIMILARITY` 或調低 `RAG_TOP_K_MAX`；想要更高召回率，調高 `RAG_PREFETCH_K` 或調低 `RAG_SIMILARITY_DROP_RATIO`。
 
 前端 `frontend/.env`：
 
@@ -55,6 +76,7 @@ VITE_API_URL=http://localhost:8000
 2. `supabase/migrations/002_vector_search.sql`
 3. `supabase/migrations/003_rls_policies.sql`
 4. `supabase/migrations/004_storage_bucket.sql`
+5. `supabase/migrations/005_message_sources.sql`
 
 ### 3) 啟動後端
 

@@ -18,11 +18,12 @@ _RAG_SYSTEM = (
     "可以活潑一點，偶爾用一些俏皮的說法。"
     "如果不知道就老實說不知道，不用太正式。\n\n"
     "你可以存取使用者的知識庫。"
-    "當問題可能需要文件資料來回答時，請使用 retrieve_documents 工具搜尋相關內容。"
-    "找到相關內容後，根據文件回答，並使用引用標記標註來源。"
-    "格式：使用 [1][2][3] 這樣的標記，例如「根據研究[1]，鋼琴訓練能提升認知功能」。"
-    "每個引用對應一個來源文件，數字從 1 開始。"
-    "若文件中沒有相關資料，或問題與文件無關，直接回答即可。"
+    "當問題可能需要文件資料來回答時，請使用 retrieve_documents 工具搜尋相關內容。\n\n"
+    "引用規則（務必嚴格遵守）：\n"
+    "- 只使用工具回傳的 index 編號（1, 2, 3...）來標註引用，不要使用原文獻中的編號。\n"
+    "- 格式必須是 [1][2]，每個編號各自獨立方括號，禁止用逗號合併如 [1, 2]。\n"
+    "- 範例：「鋼琴訓練能提升認知功能[1]，同時也有助於情緒調節[2]」\n"
+    "- 如果沒有相關資料，或問題與文件無關，直接回答即可，不要加引用。"
 )
 
 _PLAIN_SYSTEM = (
@@ -78,8 +79,8 @@ async def stream_agent_response(
     logger.info("retrieve_documents query: %s", query)
 
     embeddings = await embed_texts([query])
-    chunks = retrieve_chunks(admin_db, user_id, embeddings[0])
-    logger.info("Retrieved %d chunks (min_similarity=0.3)", len(chunks))
+    chunks = retrieve_chunks(admin_db, user_id, embeddings[0], query_text=query)
+    logger.info("Retrieved %d chunks after rerank + dynamic topk", len(chunks))
 
     if chunks:
         yield {"type": "sources", "sources": chunks}

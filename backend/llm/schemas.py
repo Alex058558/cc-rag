@@ -23,3 +23,4 @@ class MessageOut(BaseModel):
     role: str
     content: str
     created_at: str
+    sources: list[dict] | None = None

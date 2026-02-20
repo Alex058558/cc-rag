@@ -11,6 +11,13 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-004"
     frontend_url: str = "http://localhost:5173"
 
+    # RAG retrieval
+    rag_prefetch_k: int = 15
+    rag_top_k_max: int = 5
+    rag_top_k_min: int = 1
+    rag_min_similarity: float = 0.3
+    rag_similarity_drop_ratio: float = 0.6
+
     model_config = {"env_file": "backend/.env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 

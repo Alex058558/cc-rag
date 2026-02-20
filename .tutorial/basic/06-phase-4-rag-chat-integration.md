@@ -60,17 +60,35 @@ data: [DONE]
 
 此外，也加上 `Referenced answer text`，幫助理解回答片段與來源 chunk 的對應。
 
+## 檢索品質提升（已完成）
+
+初始版本使用固定 `top_k=5`，後續已升級為三段式檢索：
+
+1. **Prefetch** — 先撈 15 筆候選（可配置 `rag_prefetch_k`）
+2. **Heuristic Rerank** — 用關鍵詞覆蓋率 + 結構特徵重排，不依賴外部模型
+3. **Dynamic Top-K** — 根據 similarity 分佈動態截斷，回傳 1~5 筆
+
+所有參數可從 `.env` 調整，詳見 [rag/04-retrieval-tuning.md](../rag/04-retrieval-tuning.md)。
+
+## Citation 持久化
+
+引用來源存入 `messages.sources` JSONB 欄位（migration: `005_message_sources.sql`）。
+
+切換對話再回來時，citation 仍可正常渲染，不會變成純文字。
+
 ## 目前限制與下一步
 
-目前是「可用版」——固定 `top_k=5`、無 rerank、無 hybrid search。還有優化空間。
-
-下一步的檢索升級策略（動態 Top-K、Rerank、品質觀測）見 [rag/04-retrieval-tuning.md](../rag/04-retrieval-tuning.md)。
+- Hybrid search（pgvector + full-text search）尚未實作
+- 中文斷詞（jieba）可提升 heuristic rerank 效果
+- 離線題組驗證尚未執行
 
 ## 完成判定
 
-Phase 4 現階段可用版完成時，至少要滿足：
+Phase 4 滿足以下條件：
 
 - 聊天可引用已上傳文件
 - 前端可檢視來源 chunk
 - 回答與引用索引順序一致
 - 無文件時能回退為一般聊天
+- 引用來源切換對話後仍可顯示
+- 檢索結果數量隨問題精確度動態調整

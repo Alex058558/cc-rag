@@ -1,6 +1,6 @@
 # PROGRESS
 
-> Updated: 2026-02-19
+> Updated: 2026-02-20
 
 ## 狀態標記
 
@@ -54,13 +54,15 @@
 
 ## Phase 4: RAG 檢索 + 聊天整合
 
-- [-] 檢索服務 (目前 vector + similarity 篩選；hybrid/reranking 未完成)
+- [x] 檢索服務 (三段式：prefetch + heuristic rerank + dynamic top-k)
+- [x] RAG 參數可配置 (config.py: rag_prefetch_k, rag_top_k_*, rag_min_similarity, rag_similarity_drop_ratio)
 - [x] Agent 工具定義 (retrieve_documents tool)
 - [x] Agent 核心 (tool calling loop)
 - [x] 聊天 API 整合 RAG
+- [x] Citation 持久化 (messages.sources JSONB, migration 005)
 - [ ] Supabase vector search function + 全文搜索 index
 - [x] 前端引用來源顯示 (SourceCard / Citation popover)
-- [-] Phase 4 驗證：聊天引用文件、hybrid search、來源顯示（hybrid/reranking 待補）
+- [-] Phase 4 驗證：聊天引用文件、來源顯示（hybrid search 待補）
 
 ---
 

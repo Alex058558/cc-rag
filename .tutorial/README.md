@@ -41,7 +41,7 @@
 | [01-concept.md](rag/01-concept.md) | RAG 核心概念、最小流程、常見誤解 |
 | [02-sse-streaming.md](rag/02-sse-streaming.md) | SSE 實作（後端 StreamingResponse、前端 reader） |
 | [03-document-pipeline.md](rag/03-document-pipeline.md) | 管線全解（Docling、Schema、API、踩坑紀錄） |
-| [04-retrieval-tuning.md](rag/04-retrieval-tuning.md) | 動態 Top-K、Rerank 概念與驗證方式 |
+| [04-retrieval-tuning.md](rag/04-retrieval-tuning.md) | 三段式檢索實作（Prefetch、Heuristic Rerank、Dynamic Top-K）|
 
 ### backend/ — 後端技術
 

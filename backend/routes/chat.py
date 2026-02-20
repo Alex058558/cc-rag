@@ -63,14 +63,16 @@ async def chat(body: ChatRequest, user: AuthUser = Depends(get_current_user)):
         yield f"data: {json.dumps({'conversation_id': conversation_id})}\n\n"
 
         full_response = ""
+        collected_sources: list[dict] | None = None
         async for event in stream_agent_response(llm, user.id, history):
             if event["type"] == "sources":
-                yield f"data: {json.dumps({'sources': event['sources']})}\n\n"
+                collected_sources = event["sources"]
+                yield f"data: {json.dumps({'sources': collected_sources})}\n\n"
             elif event["type"] == "token":
                 full_response += event["token"]
                 yield f"data: {json.dumps({'token': event['token']})}\n\n"
 
-        await save_message(db, conversation_id, user.id, "assistant", full_response)
+        await save_message(db, conversation_id, user.id, "assistant", full_response, sources=collected_sources)
 
         if is_first:
             await update_conversation_title(llm, db, conversation_id, body.message)

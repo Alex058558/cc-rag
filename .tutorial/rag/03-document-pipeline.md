@@ -273,12 +273,12 @@ backend/
 │   └── record_manager.py      # 資料庫操作
 ```
 
-## 下一步（Phase 4 檢索調參）
+## Phase 4 檢索調參（已完成）
 
-文件切塊與向量化完成後，下一階段是檢索品質優化：
+文件切塊與向量化完成後，Phase 4 已實作檢索品質優化：
 
-- 固定 `top_k` 升級為可配置動態 Top-K
-- 加入 rerank 二次排序
-- 增加檢索觀測與驗證題組
+- 固定 `top_k` 升級為三段式檢索（Prefetch → Heuristic Rerank → Dynamic Top-K）
+- 所有 RAG 參數可從 `.env` 配置
+- Citation 來源持久化到 `messages.sources` JSONB
 
-詳細計畫見：`.tutorial/rag/04-retrieval-tuning.md`
+詳細實作說明見：[rag/04-retrieval-tuning.md](04-retrieval-tuning.md)

@@ -102,7 +102,7 @@ LLM (Gemini via OpenAI-compatible API)
 
 ### Supabase
 
-- `messages` table: id, conversation_id, role, content, created_at, user_id
+- `messages` table: id, conversation_id, role, content, created_at, user_id, sources (jsonb)
 - `conversations` table: id, title, created_at, updated_at, user_id
 - RLS: 用戶只能存取自己的對話與訊息
 
@@ -256,7 +256,8 @@ cc-rag/
 │       ├── 001_initial_schema.sql
 │       ├── 002_vector_search.sql
 │       ├── 003_rls_policies.sql
-│       └── 004_storage_bucket.sql
+│       ├── 004_storage_bucket.sql
+│       └── 005_message_sources.sql
 ├── .workflow/
 │   ├── PLAN.md
 │   ├── PROGRESS.md
