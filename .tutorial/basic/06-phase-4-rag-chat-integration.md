@@ -16,17 +16,17 @@ Phase 4 是把「文件知識」接進聊天：
 
 ### 後端
 
-- `backend/agent/tools.py`：`retrieve_documents` tool 定義
-- `backend/agent/agent.py`：tool calling + context 組裝 + token stream
-- `backend/services/retrieval.py`：Hybrid/Vector 檢索、heuristic rerank、dynamic top-k
-- `backend/routes/chat.py`：SSE 事件整合（`sources` + `token`）
+- [`backend/agent/tools.py`](../../backend/agent/tools.py)：`retrieve_documents` tool 定義
+- [`backend/agent/agent.py`](../../backend/agent/agent.py)：tool calling + context 組裝 + token stream
+- [`backend/services/retrieval.py`](../../backend/services/retrieval.py)：Hybrid/Vector 檢索、heuristic rerank、dynamic top-k
+- [`backend/routes/chat.py`](../../backend/routes/chat.py)：SSE 事件整合（`sources` + `token`）
 
 ### 前端
 
-- `frontend/src/components/chat/MessageList.tsx`：解析 `[n]` 引用並渲染 citation button
-- `frontend/src/components/chat/Citation.tsx`：popover 顯示來源詳情
-- `frontend/src/components/ui/popover.tsx`：基礎 popover 元件
-- `frontend/src/hooks/useChat.ts`：接收 `sources` 事件並綁定訊息
+- [`frontend/src/components/chat/MessageList.tsx`](../../frontend/src/components/chat/MessageList.tsx)：解析 `[n]` 引用並渲染 citation button
+- [`frontend/src/components/chat/Citation.tsx`](../../frontend/src/components/chat/Citation.tsx)：popover 顯示來源詳情
+- [`frontend/src/components/ui/popover.tsx`](../../frontend/src/components/ui/popover.tsx)：基礎 popover 元件
+- [`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts)：接收 `sources` 事件並綁定訊息
 
 ## 關鍵名詞
 
@@ -72,7 +72,7 @@ data: [DONE]
 
 ## Citation 持久化
 
-引用來源存入 `messages.sources` JSONB 欄位（migration: `005_message_sources.sql`）。
+引用來源存入 `messages.sources` JSONB 欄位（migration: [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql)）。
 
 切換對話再回來時，citation 仍可正常渲染，不會變成純文字。
 

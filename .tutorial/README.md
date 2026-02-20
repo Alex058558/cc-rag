@@ -15,6 +15,7 @@
 5. [Phase 3 文件管線](basic/05-phase-3-document-pipeline.md)
 6. [Phase 4 RAG 聊天整合](basic/06-phase-4-rag-chat-integration.md)
 7. [RAG 名詞表](basic/07-rag-glossary.md)（隨時查閱）
+8. [程式碼導覽地圖](basic/08-code-navigation.md)（閱讀教學時搭配）
 
 ### 路線 B：按技術主題（已有基礎）
 
@@ -33,6 +34,7 @@
 | [05-phase-3-document-pipeline.md](basic/05-phase-3-document-pipeline.md) | 文件上傳、Docling、Chunking、Embedding |
 | [06-phase-4-rag-chat-integration.md](basic/06-phase-4-rag-chat-integration.md) | Tool Calling、Citation 渲染 |
 | [07-rag-glossary.md](basic/07-rag-glossary.md) | 術語表（Agent、Chunk、Embedding、RAG...） |
+| [08-code-navigation.md](basic/08-code-navigation.md) | 教學對照程式碼入口（可點擊路徑） |
 
 ### rag/ — RAG 專題深入
 
@@ -76,6 +78,6 @@
 
 `basic/` 是主線摘要，說明每個 Phase 做了什麼、為什麼這樣做。
 
-其他目錄（`rag/`、`backend/`、`frontend/`、`database/`）是專題深入，包含完整程式碼、SQL schema 和踩坑紀錄。
+其他目錄（[`rag/`](rag/)、[`backend/`](backend/)、[`frontend/`](frontend/)、[`database/`](database/)）是專題深入，包含完整程式碼、SQL schema 和踩坑紀錄。
 
 主線文件會連結到對應專題，不會重複同一段內容。

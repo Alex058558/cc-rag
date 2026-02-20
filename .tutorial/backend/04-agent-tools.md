@@ -8,10 +8,10 @@ Phase 4 加入了 Agent 層，讓 LLM 不只是回話，還會先「查資料」
 
 ## 檔案對應
 
-- `backend/agent/tools.py`：工具定義
-- `backend/agent/agent.py`：Agent 流程控制
-- `backend/services/retrieval.py`：實際執行檢索
-- `backend/services/embedding.py`：query 向量化
+- [`backend/agent/tools.py`](../../backend/agent/tools.py)：工具定義
+- [`backend/agent/agent.py`](../../backend/agent/agent.py)：Agent 流程控制
+- [`backend/services/retrieval.py`](../../backend/services/retrieval.py)：實際執行檢索
+- [`backend/services/embedding.py`](../../backend/services/embedding.py)：query 向量化
 
 ## Tool 定義
 
@@ -91,7 +91,7 @@ messages.append({"role": "tool", "tool_call_id": tool_call.id, "content": tool_c
 
 ## SSE 事件順序
 
-Agent 產出的事件會被 `routes/chat.py` 轉成 SSE：
+Agent 產出的事件會被 [`backend/routes/chat.py`](../../backend/routes/chat.py) 轉成 SSE：
 
 ```text
 data: {"conversation_id": "..."}    <- 建立/沿用對話

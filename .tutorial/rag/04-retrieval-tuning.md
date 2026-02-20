@@ -28,7 +28,7 @@ Stage 3: Dynamic Top-K
 
 ## 設定參數
 
-所有參數在 `backend/config.py` 的 `Settings` class，可透過 `.env` 覆蓋：
+所有參數在 [`backend/config.py`](../../backend/config.py) 的 `Settings` class，可透過 `.env` 覆蓋：
 
 | 參數 | 預設值 | 說明 |
 |------|--------|------|
@@ -68,15 +68,15 @@ final_score = similarity * 0.7 + keyword_coverage * 0.25 + structure_bonus
 
 ## Citation 持久化
 
-助手訊息的引用來源會存入 `messages.sources` JSONB 欄位（migration: `005_message_sources.sql`），切換對話再回來時 citation 仍可正常顯示。
+助手訊息的引用來源會存入 `messages.sources` JSONB 欄位（migration: [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql)），切換對話再回來時 citation 仍可正常顯示。
 
 ## 對應程式碼
 
-- `backend/config.py` — RAG 參數定義
-- `backend/services/retrieval.py` — 三段式檢索
-- `backend/agent/agent.py` — agent tool calling + citation prompt
-- `backend/routes/chat.py` — sources 持久化
-- `supabase/migrations/005_message_sources.sql` — messages 表加 sources 欄位
+- [`backend/config.py`](../../backend/config.py) — RAG 參數定義
+- [`backend/services/retrieval.py`](../../backend/services/retrieval.py) — 三段式檢索
+- [`backend/agent/agent.py`](../../backend/agent/agent.py) — agent tool calling + citation prompt
+- [`backend/routes/chat.py`](../../backend/routes/chat.py) — sources 持久化
+- [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql) — messages 表加 sources 欄位
 
 ## 驗證方式
 

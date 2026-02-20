@@ -26,11 +26,11 @@ CC-RAG 是一個 **RAG（檢索增強生成）應用程式**。
 ## Phase 1 完成什麼？
 
 ### 後端
-- `main.py` - FastAPI 入口 + CORS + health endpoint
-- `config.py` - Pydantic Settings 管理環境變數
-- `database.py` - Supabase client (anon + admin)
-- `auth/middleware.py` - JWT 驗證
-- `routes/chat.py`, `routes/documents.py` - API 路由骨架
+- [`backend/main.py`](../../backend/main.py) - FastAPI 入口 + CORS + health endpoint
+- [`backend/config.py`](../../backend/config.py) - Pydantic Settings 管理環境變數
+- [`backend/database.py`](../../backend/database.py) - Supabase client (anon + admin)
+- [`backend/auth/middleware.py`](../../backend/auth/middleware.py) - JWT 驗證
+- [`backend/routes/chat.py`](../../backend/routes/chat.py)、[`backend/routes/documents.py`](../../backend/routes/documents.py) - API 路由骨架
 
 ### 前端
 - Vite + React + TypeScript + Tailwind v4 + shadcn/ui
@@ -40,9 +40,15 @@ CC-RAG 是一個 **RAG（檢索增強生成）應用程式**。
 - App.tsx - Router + ProtectedRoute 守衛
 
 ### 資料庫
-- `001_initial_schema.sql` - conversations + messages 表
-- `002_vector_search.sql` - documents + document_chunks + 向量搜尋
-- `003_rls_policies.sql` - 全部 4 張表的 RLS policies
+- [`supabase/migrations/001_initial_schema.sql`](../../supabase/migrations/001_initial_schema.sql) - conversations + messages 表
+- [`supabase/migrations/002_vector_search.sql`](../../supabase/migrations/002_vector_search.sql) - documents + document_chunks + 向量搜尋
+- [`supabase/migrations/003_rls_policies.sql`](../../supabase/migrations/003_rls_policies.sql) - 全部 4 張表的 RLS policies
+- [`supabase/migrations/004_storage_bucket.sql`](../../supabase/migrations/004_storage_bucket.sql) - documents bucket + Storage RLS
+
+後續在 Phase 4 相關能力又新增：
+
+- [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql) - citation sources 持久化
+- [`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql) - hybrid retrieval（FTS + vector + RRF）
 
 ## 學習路徑
 

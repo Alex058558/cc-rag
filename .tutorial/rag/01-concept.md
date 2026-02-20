@@ -25,7 +25,8 @@ RAG 把「可查證的內容」放進提示詞，讓回答更可追溯。
 ```text
 使用者問題
 -> 將問題轉 embedding
--> 在 document_chunks 做向量檢索
+-> Stage 1: prefetch（hybrid 或 vector）
+-> Stage 2: heuristic rerank
 -> 取前幾個相關 chunk
 -> 把 chunk 與問題一起丟給 LLM
 -> LLM 回答並標記引用 [1][2]...
@@ -71,25 +72,28 @@ RAG 把「可查證的內容」放進提示詞，讓回答更可追溯。
 
 引用來源會存入資料庫（`messages.sources` JSONB），切換對話再回來時仍可正常顯示。
 
-## 你專案目前設定（2026-02）
+## 本專案目前設定（2026-02）
 
 - 檢索流程：三段式（Prefetch → Heuristic Rerank → Dynamic Top-K）
+- Prefetch 模式：`hybrid_search`（預設）或 `match_documents`（fallback）
 - Prefetch：`rag_prefetch_k=15`
 - 最終回傳：`rag_top_k_min=1` ~ `rag_top_k_max=5`
 - 門檻：`rag_min_similarity=0.3`
 - 動態截斷：`rag_similarity_drop_ratio=0.6`（低於最高分 * 0.6 就砍）
+- Hybrid 參數：`rag_hybrid_enabled`、`rag_rrf_k`、`rag_full_text_weight`、`rag_semantic_weight`
 - Embedding 維度：`vector(768)`
 - Embedding 模型：`text-embedding-004`
 
-所有 RAG 參數可透過 `.env` 覆蓋，定義在 `backend/config.py`。
+所有 RAG 參數可透過 `.env` 覆蓋，定義在 [`backend/config.py`](../../backend/config.py)。
 
 對應檔案：
 
-- `backend/config.py` — RAG 參數
-- `backend/services/retrieval.py` — 三段式檢索
-- `backend/services/embedding.py` — 向量化
-- `supabase/migrations/002_vector_search.sql` — pgvector search function
-- `supabase/migrations/005_message_sources.sql` — citation 持久化
+- [`backend/config.py`](../../backend/config.py) — RAG 參數
+- [`backend/services/retrieval.py`](../../backend/services/retrieval.py) — 三段式檢索
+- [`backend/services/embedding.py`](../../backend/services/embedding.py) — 向量化
+- [`supabase/migrations/002_vector_search.sql`](../../supabase/migrations/002_vector_search.sql) — pgvector search function
+- [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql) — citation 持久化
+- [`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql) — hybrid search（FTS + RRF）
 
 ## 一個實例
 

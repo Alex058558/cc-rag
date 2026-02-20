@@ -48,7 +48,7 @@ response = await client.chat.completions.create(
 
 ## 在專案中的位置
 
-`backend/llm/client.py` - LLM 客戶端統一管理
+[`backend/llm/client.py`](../../backend/llm/client.py) - LLM 客戶端統一管理
 
 ## 常見問題
 

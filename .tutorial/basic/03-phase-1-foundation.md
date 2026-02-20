@@ -16,13 +16,13 @@
 
 ### 1) 後端 FastAPI 骨架
 
-- `backend/main.py`：FastAPI 入口、路由掛載、CORS 設定
-- `backend/config.py`：讀取環境變數（Pydantic Settings）
-- `backend/database.py`：建立 Supabase client（一般權限 + 管理權限）
+- [`backend/main.py`](../../backend/main.py)：FastAPI 入口、路由掛載、CORS 設定
+- [`backend/config.py`](../../backend/config.py)：讀取環境變數（Pydantic Settings）
+- [`backend/database.py`](../../backend/database.py)：建立 Supabase client（一般權限 + 管理權限）
 
 ### 2) 認證與授權
 
-- `backend/auth/middleware.py`：解析 Bearer token，取得當前使用者
+- [`backend/auth/middleware.py`](../../backend/auth/middleware.py)：解析 Bearer token，取得當前使用者
 - 核心概念：
   - `Authentication`：你是誰（登入身份）
   - `Authorization`：你能做什麼（權限範圍）
@@ -34,10 +34,10 @@
 
 ### 3) 前端基礎框架
 
-- `frontend/src/contexts/AuthContext.tsx`：全域登入狀態
-- `frontend/src/pages/LoginPage.tsx`：登入/註冊 UI
-- `frontend/src/components/Layout.tsx`：基本頁面骨架與導覽
-- `frontend/src/App.tsx`：路由與受保護頁面
+- [`frontend/src/contexts/AuthContext.tsx`](../../frontend/src/contexts/AuthContext.tsx)：全域登入狀態
+- [`frontend/src/pages/LoginPage.tsx`](../../frontend/src/pages/LoginPage.tsx)：登入/註冊 UI
+- [`frontend/src/components/Layout.tsx`](../../frontend/src/components/Layout.tsx)：基本頁面骨架與導覽
+- [`frontend/src/App.tsx`](../../frontend/src/App.tsx)：路由與受保護頁面
 
 ### 4) Supabase 基礎資料模型
 
@@ -47,7 +47,7 @@
 
 ### 5) Storage 與權限
 
-- `supabase/migrations/004_storage_bucket.sql`：建立 `documents` bucket
+- [`supabase/migrations/004_storage_bucket.sql`](../../supabase/migrations/004_storage_bucket.sql)：建立 `documents` bucket
 - 搭配 RLS policy，確保使用者只能看到自己的檔案
 
 ## 關鍵名詞

@@ -38,10 +38,10 @@
 
 ## 專案對照（CC-RAG）
 
-- Retrieval：`backend/services/retrieval.py`
-- Hybrid SQL：`supabase/migrations/006_hybrid_search.sql`
-- 參數：`backend/config.py`
-- 評測集：`eval/EVAL_PIANO_V1.yaml`
+- Retrieval：[`backend/services/retrieval.py`](../../backend/services/retrieval.py)
+- Hybrid SQL：[`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql)
+- 參數：[`backend/config.py`](../../backend/config.py)
+- 評測集：[`eval/EVAL_PIANO_V1.yaml`](../../eval/EVAL_PIANO_V1.yaml)
 
 ## 常見誤區
 
@@ -52,7 +52,7 @@
 
 ## 複習順序（15 分鐘版）
 
-1. 先看 `.tutorial/rag/01-concept.md`
-2. 再看 `.tutorial/rag/06-hybrid-search.md`
-3. 再看 `.tutorial/rag/07-evaluation-and-qa-pairs.md`
+1. 先看 [`.tutorial/rag/01-concept.md`](01-concept.md)
+2. 再看 [`.tutorial/rag/06-hybrid-search.md`](06-hybrid-search.md)
+3. 再看 [`.tutorial/rag/07-evaluation-and-qa-pairs.md`](07-evaluation-and-qa-pairs.md)
 4. 最後用這份地圖做總結

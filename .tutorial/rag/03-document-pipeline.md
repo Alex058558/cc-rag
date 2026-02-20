@@ -20,7 +20,7 @@ Embedding 模型轉向量
 
 ### 1. 文件解析 - Docling
 
-`backend/services/document_processor.py`
+[`backend/services/document_processor.py`](../../backend/services/document_processor.py)
 
 ```python
 from docling.document_converter import DocumentConverter
@@ -59,7 +59,7 @@ markdown_text = result.document.export_to_markdown()
 
 ### 3. 向量化 - Embedding
 
-`backend/services/embedding.py`
+[`backend/services/embedding.py`](../../backend/services/embedding.py)
 
 ```python
 response = await client.embeddings.create(

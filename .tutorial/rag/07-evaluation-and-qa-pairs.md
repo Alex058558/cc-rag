@@ -44,7 +44,7 @@
 
 ## 本專案已實作的評測集
 
-- 檔案：`eval/EVAL_PIANO_V1.yaml`
+- 檔案：[`eval/EVAL_PIANO_V1.yaml`](../../eval/EVAL_PIANO_V1.yaml)
 - 主題：`鋼琴訓練的深層影響.pdf`
 - 題數：10
 - 格式：`query + query_type + expected_evidence + expected_answer_points`

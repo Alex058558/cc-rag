@@ -1,131 +1,264 @@
 # RAG 名詞表
 
-這份文件把 Phase 1-4 常見術語集中整理，遇到不懂的詞可先回來查。
+這份文件整理 CC-RAG 常見術語，重點放在「看得懂專案」與「能做調參決策」。
 
-建議用法：看到陌生名詞先查一次，再回到教學文件讀，理解速度會快很多。
+建議用法：
+
+1. 先查名詞，掌握大方向
+2. 再回到對應教學看完整流程
+3. 最後對照專案檔案確認落地位置
 
 ## A
 
 ### Agent
 
-在本專案中指「可呼叫工具再回答」的聊天邏輯層，不是單純對話模型。
+在本專案中，指可呼叫工具（例如檢索）再回答的邏輯層，不是單純聊天模型。
 
-白話就是：它不只是會聊天，還會先去做事（例如檢索）再回話。
+### ANN（Approximate Nearest Neighbor）
 
-### API
+近似最近鄰搜尋。向量檢索常用 ANN 提升速度，用「可接受的近似」換效能。
 
-系統之間溝通的介面。前端透過 API 呼叫後端，後端再呼叫資料庫或模型。
+## B
+
+### Backfill
+
+新增欄位/新功能後，把舊資料補齊。例：[`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql) 會把舊 `document_chunks` 回填 `fts`。
+
+### BM25
+
+常見關鍵詞排序演算法。PostgreSQL FTS 不是 BM25，但概念上都屬 lexical ranking。
 
 ## C
 
 ### Chunk
 
-長文件切出的片段，是檢索與引用的最小單位。
+文件切片後的最小檢索單位。
+
+### Chunk Overlap
+
+相鄰 chunk 的重疊內容，減少語境被切斷。
+
+### Citation
+
+回答中的 `[1]`、`[2]`，對應來源片段。
 
 ### Citation Persistence
 
-引用來源持久化。把檢索到的 sources 存進 `messages.sources` JSONB 欄位，這樣切換對話再回來時 citation 仍可正常顯示。對應 migration: `005_message_sources.sql`。
+把來源存到 `messages.sources`，切換對話仍能還原引用（[`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql)）。
 
 ### Cosine Similarity
 
-向量相似度計算方式，值越高通常表示語意越接近。
+向量相似度分數，越高通常表示語意越接近。
 
 ## D
 
 ### Dynamic Top-K
 
-不固定取幾筆檢索結果，而是根據候選的 similarity 分佈動態決定。如果前幾名分數很集中、後面突然掉很多，就自動截斷。避免問題單純時帶入太多噪音。
+不是固定 K，而是根據分數落差動態截斷。避免把低品質片段塞進提示詞。
 
-設定參數：`rag_top_k_min`（最少取幾筆）、`rag_top_k_max`（最多取幾筆）、`rag_similarity_drop_ratio`（截斷比例）。
+### Document Ingestion
+
+文件匯入流程：上傳 -> 解析 -> 切片 -> 向量化 -> 寫入資料庫。
 
 ## E
 
 ### Embedding
 
-把文字轉成向量，讓資料庫能做語意搜尋。
+把文字轉成向量，讓系統可做語意搜尋。
+
+### Evaluation Set
+
+固定題組（query + expected evidence + answer points），用來比較不同版本檢索品質。
+
+### Exact Match
+
+關鍵詞精準匹配。對錯誤碼、函式名、型號特別重要。
+
+## F
+
+### Feature Flag
+
+用設定開關控制功能。例：`rag_hybrid_enabled` 可快速切換 hybrid/vector。
+
+### Fallback
+
+主要路徑失效或關閉時的回退路徑。例：hybrid 關閉時回到 `match_documents`。
+
+### Full-Text Search（FTS）
+
+關鍵詞導向搜尋。CC-RAG 使用 PostgreSQL `tsvector + tsquery + ts_rank`。
+
+## G
+
+### GIN Index
+
+PostgreSQL 的全文索引類型，用來加速 `tsvector` 查詢。
+
+### Grounding
+
+回答內容需被檢索證據支撐，降低「看起來對但其實沒根據」。
 
 ## H
 
 ### Heuristic Rerank
 
-不用外部模型的二次排序方式。本專案的 heuristic rerank 用三個因子重新打分：
+規則式二次排序。CC-RAG 目前用：similarity + keyword coverage + structure bonus。
 
-- vector similarity（70%）— 原本的向量相似度
-- keyword coverage（25%）— query 關鍵詞在 chunk 中出現的比例
-- structure bonus（5%）— chunk 開頭是 markdown heading 的話加分
+### Hit@k
 
-和模型 rerank（如 Cohere Rerank）相比，零額外成本、零延遲，但精度有限。
+前 k 個檢索結果是否至少命中一段正確 evidence。
 
 ### Hybrid Search
 
-同時使用 keyword 搜尋與向量搜尋，再合併結果。
+結合 semantic search + full-text search，再融合排序。
+
+## I
+
+### IVF Flat（ivfflat）
+
+pgvector 常見索引，透過分群加速近似向量搜尋。
+
+### Index（索引）
+
+加速查詢的資料結構。RAG 常見索引：ivfflat（向量）、GIN（全文）。
 
 ## J
 
+### JSONB
+
+PostgreSQL 的 JSON 二進位格式，適合存半結構化資料。CC-RAG 用於 `messages.sources`、`metadata`。
+
 ### JWT
 
-登入後的身份 token，後端用它辨識呼叫者。
+身份 token，後端用來識別使用者。
+
+## K
+
+### Keyword Coverage
+
+query 關鍵詞在 chunk 的覆蓋率，常用於 rerank 加分。
+
+## L
+
+### Latency
+
+延遲。RAG 常拆成 embedding / retrieval / generation 三段觀察。
+
+### Lexical Search
+
+字詞匹配導向搜尋，與 semantic search 互補。
 
 ## M
 
+### Match Count
+
+資料庫函數一次最多回傳幾筆候選。例：`match_documents(match_count=...)`。
+
+### Metadata
+
+附加在 chunk 的結構化資訊，例如檔名、頁碼、段落標題。
+
 ### Migration
 
-資料庫版本變更檔，確保每個環境 schema 一致。
+用 SQL 檔管理 schema 版本，確保環境一致。
 
 ## P
 
-### Prefetch
-
-在做 rerank 和最終裁切之前，先用向量檢索多撈一批候選（例如 15 筆）。給後續步驟更多素材可選，提升最終結果品質。
-
-設定參數：`rag_prefetch_k`（預設 15）。
-
 ### pgvector
 
-PostgreSQL extension，提供向量欄位與向量索引能力。
+PostgreSQL extension，提供向量欄位與向量查詢能力。
 
-### Prompt
+### Prefetch
 
-傳給 LLM 的輸入內容，包含系統指令、歷史對話、檢索片段。
+先多撈候選，再 rerank 與裁切。目的是提高召回率與可選空間。
+
+### Precision
+
+撈到的結果有多少是真的相關。Precision 高表示噪音少。
+
+### Prompt Assembly
+
+把系統指令、對話歷史、檢索片段組成最終提示詞的過程。
+
+## Q
+
+### Query Embedding
+
+把使用者問題轉成向量，供 semantic search 使用。
+
+### Query Rewriting
+
+對 query 做改寫以提升檢索命中（本專案目前未啟用）。
 
 ## R
 
 ### RAG
 
-Retrieval-Augmented Generation。先檢索再生成，降低胡亂回答機率。
+Retrieval-Augmented Generation：先檢索再生成。
+
+### Recall
+
+應該撈到的相關證據，有多少被撈到。Recall 高表示漏抓少。
+
+### Recall@k
+
+只看前 k 筆時的召回率。
 
 ### Rerank
 
-二次排序。先撈候選，再重新排序，讓最相關內容排前面。
-
-可以理解成海選後再決賽，避免第一輪把看起來像、但其實不夠準的內容排太前面。
-
-常見做法：
-- **Heuristic rerank** — 用關鍵詞覆蓋、結構特徵等規則打分（本專案目前用這個）
-- **Model rerank** — 用 cross-encoder 模型（如 Cohere Rerank）做精排，品質更好但有外部依賴
+二次排序。先粗篩候選，再把高價值片段排到前面。
 
 ### RLS
 
-Row-Level Security。資料庫行級權限控制，保護多租戶資料。
+Row-Level Security。資料庫行級權限保護。
+
+### RRF（Reciprocal Rank Fusion）
+
+融合多個排名來源的做法。CC-RAG 用於合併 vector rank + full-text rank。
+
+公式：`score = w1/(k+r1) + w2/(k+r2)`。
 
 ## S
 
-### SSE
+### Semantic Search
 
-Server-Sent Events，伺服器單向持續推送資料給前端，常用於串流回覆。
+語意相近導向搜尋，重點是意思接近，不必字面完全一致。
 
 ### Similarity Threshold
 
-相似度門檻，低於門檻的候選會被過濾。
+相似度門檻。vector 模式常用 `rag_min_similarity` 過濾低分候選。
+
+### SSE
+
+Server-Sent Events，伺服器單向流式推送。
 
 ## T
 
 ### Top-K
 
-檢索要取前幾個結果。K 越大通常召回越高，但噪音也可能增加。
+最終送入 LLM 的片段數量。K 太小易漏、太大易噪音。
 
-常見問題不是「要不要調 K」，而是「不同題型該用哪個 K」。
+### tsvector
+
+PostgreSQL 的全文索引向量欄位格式。CC-RAG 在 `document_chunks.fts` 使用。
+
+### Trigger
+
+資料庫觸發器。例：`trg_document_chunks_fts` 在內容更新時自動刷新 FTS 欄位。
 
 ### Tool Calling
 
-模型先決定是否呼叫工具（例如 `retrieve_documents`）再回答。
+模型先決定是否呼叫工具（如 `retrieve_documents`）再回答。
+
+## V
+
+### Vector Store
+
+存放向量資料並支援相似搜尋的系統。CC-RAG 用 PostgreSQL + pgvector。
+
+## 對照索引（建議延伸閱讀）
+
+- Hybrid / RRF：[`.tutorial/rag/06-hybrid-search.md`](../rag/06-hybrid-search.md)
+- 評測 / QA Pair：[`.tutorial/rag/07-evaluation-and-qa-pairs.md`](../rag/07-evaluation-and-qa-pairs.md)
+- 快速全圖：[`.tutorial/rag/08-domain-knowledge-quick-map.md`](../rag/08-domain-knowledge-quick-map.md)
+- 資料庫觀念：[`.tutorial/database/02-concepts.md`](../database/02-concepts.md)

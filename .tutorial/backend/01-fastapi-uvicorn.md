@@ -46,7 +46,7 @@ FastAPI 是框架，Uvicorn 是伺服器。兩者需要搭配使用。
 uvicorn backend.main:app --reload
 ```
 
-- `backend.main:app` - `backend/main.py` 裡的 `app` 物件
+- `backend.main:app` - [`backend/main.py`](../../backend/main.py) 裡的 `app` 物件
 - `--reload` - 程式碼改變時自動重啟（開發用）
 
 啟動後會看到：

@@ -15,19 +15,19 @@
 
 ### 後端
 
-- `backend/llm/client.py`：建立 Gemini OpenAI-compatible client
-- `backend/llm/schemas.py`：聊天請求/回應 schema
-- `backend/routes/chat.py`：聊天 API（含 SSE）
-- `backend/services/chat.py`：對話建立、訊息保存、歷史讀取
+- [`backend/llm/client.py`](../../backend/llm/client.py)：建立 Gemini OpenAI-compatible client
+- [`backend/llm/schemas.py`](../../backend/llm/schemas.py)：聊天請求/回應 schema
+- [`backend/routes/chat.py`](../../backend/routes/chat.py)：聊天 API（含 SSE）
+- [`backend/services/chat.py`](../../backend/services/chat.py)：對話建立、訊息保存、歷史讀取
 
 ### 前端
 
-- `frontend/src/pages/ChatPage.tsx`：聊天主頁
-- `frontend/src/components/chat/MessageList.tsx`：顯示訊息
-- `frontend/src/components/chat/MessageInput.tsx`：輸入與送出
-- `frontend/src/components/chat/ConversationSidebar.tsx`：對話清單
-- `frontend/src/hooks/useChat.ts`：串流處理
-- `frontend/src/hooks/useConversations.ts`：對話 CRUD
+- [`frontend/src/pages/ChatPage.tsx`](../../frontend/src/pages/ChatPage.tsx)：聊天主頁
+- [`frontend/src/components/chat/MessageList.tsx`](../../frontend/src/components/chat/MessageList.tsx)：顯示訊息
+- [`frontend/src/components/chat/MessageInput.tsx`](../../frontend/src/components/chat/MessageInput.tsx)：輸入與送出
+- [`frontend/src/components/chat/ConversationSidebar.tsx`](../../frontend/src/components/chat/ConversationSidebar.tsx)：對話清單
+- [`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts)：串流處理
+- [`frontend/src/hooks/useConversations.ts`](../../frontend/src/hooks/useConversations.ts)：對話 CRUD
 
 ## 關鍵名詞
 

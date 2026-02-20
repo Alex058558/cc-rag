@@ -55,7 +55,7 @@ RRF score = semantic_weight / (rrf_k + semantic_rank)
 
 ### Migration
 
-- `supabase/migrations/006_hybrid_search.sql`
+- [`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql)
   - `document_chunks.fts tsvector`
   - GIN index
   - `trg_document_chunks_fts` trigger
@@ -64,13 +64,13 @@ RRF score = semantic_weight / (rrf_k + semantic_rank)
 
 ### Backend
 
-- `backend/config.py`
+- [`backend/config.py`](../../backend/config.py)
   - `rag_hybrid_enabled`
   - `rag_rrf_k`
   - `rag_full_text_weight`
   - `rag_semantic_weight`
 
-- `backend/services/retrieval.py`
+- [`backend/services/retrieval.py`](../../backend/services/retrieval.py)
   - `_prefetch()` 依條件切 hybrid/vector
   - hybrid 模式不走 `min_similarity` 門檻
   - log 顯示 `[retrieval][hybrid]` 或 `[retrieval][vector]`

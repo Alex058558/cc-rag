@@ -20,18 +20,18 @@
 
 ### 後端
 
-- `backend/routes/documents.py`：上傳、列表、刪除 API
-- `backend/services/document_processor.py`：Docling 解析與 chunking
-- `backend/services/embedding.py`：呼叫 embedding 模型
-- `backend/services/record_manager.py`：去重、入庫、狀態更新
+- [`backend/routes/documents.py`](../../backend/routes/documents.py)：上傳、列表、刪除 API
+- [`backend/services/document_processor.py`](../../backend/services/document_processor.py)：Docling 解析與 chunking
+- [`backend/services/embedding.py`](../../backend/services/embedding.py)：呼叫 embedding 模型
+- [`backend/services/record_manager.py`](../../backend/services/record_manager.py)：去重、入庫、狀態更新
 
 ### 前端
 
-- `frontend/src/pages/ImportPage.tsx`
-- `frontend/src/components/import/FileDropZone.tsx`
-- `frontend/src/components/import/DocumentList.tsx`
-- `frontend/src/components/import/ProcessingStatus.tsx`
-- `frontend/src/hooks/useDocuments.ts`
+- [`frontend/src/pages/ImportPage.tsx`](../../frontend/src/pages/ImportPage.tsx)
+- [`frontend/src/components/import/FileDropZone.tsx`](../../frontend/src/components/import/FileDropZone.tsx)
+- [`frontend/src/components/import/DocumentList.tsx`](../../frontend/src/components/import/DocumentList.tsx)
+- [`frontend/src/components/import/ProcessingStatus.tsx`](../../frontend/src/components/import/ProcessingStatus.tsx)
+- [`frontend/src/hooks/useDocuments.ts`](../../frontend/src/hooks/useDocuments.ts)
 
 ### 資料庫
 

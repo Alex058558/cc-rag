@@ -16,7 +16,7 @@ ImportPage
 
 ## useDocuments Hook
 
-`hooks/useDocuments.ts` 管理文件列表的所有狀態。
+[`frontend/src/hooks/useDocuments.ts`](../../frontend/src/hooks/useDocuments.ts) 管理文件列表的所有狀態。
 
 ### 提供什麼？
 
@@ -128,8 +128,8 @@ const STATUS_STYLES = {
 
 | 檔案 | 用途 |
 |------|------|
-| `hooks/useDocuments.ts` | 狀態管理 + polling |
-| `components/import/FileDropZone.tsx` | 拖拽上傳 |
-| `components/import/DocumentList.tsx` | 文件清單 |
-| `components/import/ProcessingStatus.tsx` | 處理中提示 |
-| `pages/ImportPage.tsx` | 組裝頁面 |
+| [`frontend/src/hooks/useDocuments.ts`](../../frontend/src/hooks/useDocuments.ts) | 狀態管理 + polling |
+| [`frontend/src/components/import/FileDropZone.tsx`](../../frontend/src/components/import/FileDropZone.tsx) | 拖拽上傳 |
+| [`frontend/src/components/import/DocumentList.tsx`](../../frontend/src/components/import/DocumentList.tsx) | 文件清單 |
+| [`frontend/src/components/import/ProcessingStatus.tsx`](../../frontend/src/components/import/ProcessingStatus.tsx) | 處理中提示 |
+| [`frontend/src/pages/ImportPage.tsx`](../../frontend/src/pages/ImportPage.tsx) | 組裝頁面 |

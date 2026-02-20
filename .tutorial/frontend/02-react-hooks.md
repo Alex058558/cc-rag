@@ -14,7 +14,7 @@ React Hook 就是把「怎麼管理狀態」寫成函數。
 
 ## useChat Hook
 
-`frontend/src/hooks/useChat.ts` - 管理聊天狀態的鉤子。
+[`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts) - 管理聊天狀態的鉤子。
 
 ### 提供什麼？
 
@@ -71,9 +71,9 @@ const {
 
 | 檔案 | 用途 |
 |------|------|
-| `hooks/useChat.ts` | 聊天狀態管理 |
-| `hooks/useConversations.ts` | 對話列表管理 |
-| `lib/api.ts` | API fetch 工具 |
+| [`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts) | 聊天狀態管理 |
+| [`frontend/src/hooks/useConversations.ts`](../../frontend/src/hooks/useConversations.ts) | 對話列表管理 |
+| [`frontend/src/lib/api.ts`](../../frontend/src/lib/api.ts) | API fetch 工具 |
 
 ## api.ts 做了什麼？
 

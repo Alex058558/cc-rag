@@ -102,6 +102,6 @@ LLM 回傳    前端即時顯示
 
 ## 在專案中的位置
 
-- 後端：`backend/routes/chat.py` - `/api/chat` endpoint
-- 後端：`backend/agent/agent.py` - 產生 `sources` / `token` 事件
-- 前端：`frontend/src/hooks/useChat.ts` - 解析 SSE 並更新訊息與來源
+- 後端：[`backend/routes/chat.py`](../../backend/routes/chat.py) - `/api/chat` endpoint
+- 後端：[`backend/agent/agent.py`](../../backend/agent/agent.py) - 產生 `sources` / `token` 事件
+- 前端：[`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts) - 解析 SSE 並更新訊息與來源

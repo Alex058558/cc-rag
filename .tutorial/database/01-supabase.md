@@ -38,7 +38,7 @@ SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIs...
 ```
 
-### 前端 `.env.local`
+### 前端 `.env`
 
 ```env
 VITE_SUPABASE_URL=https://xxxxx.supabase.co
@@ -49,10 +49,20 @@ VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
 
 在 Supabase 後台 → **SQL Editor**，按順序執行：
 
-1. `001_initial_schema.sql` - 建立 conversations + messages 表
-2. `002_vector_search.sql` - 建立 documents + document_chunks + 向量搜尋
-3. `003_rls_policies.sql` - 設定權限
-4. `004_storage_bucket.sql` - 建立檔案儲存 bucket
+1. [`supabase/migrations/001_initial_schema.sql`](../../supabase/migrations/001_initial_schema.sql) - 建立 conversations + messages 表
+2. [`supabase/migrations/002_vector_search.sql`](../../supabase/migrations/002_vector_search.sql) - 建立 documents + document_chunks + 向量搜尋
+3. [`supabase/migrations/003_rls_policies.sql`](../../supabase/migrations/003_rls_policies.sql) - 設定權限
+4. [`supabase/migrations/004_storage_bucket.sql`](../../supabase/migrations/004_storage_bucket.sql) - 建立檔案儲存 bucket
+5. [`supabase/migrations/005_message_sources.sql`](../../supabase/migrations/005_message_sources.sql) - messages 表新增 `sources` JSONB（citation 持久化）
+6. [`supabase/migrations/006_hybrid_search.sql`](../../supabase/migrations/006_hybrid_search.sql) - 新增 `fts`、GIN index、`hybrid_search()`（RRF 融合）
+
+如果改用 CLI，也可以在專案根目錄執行：
+
+```bash
+supabase db push
+```
+
+前提是先完成 `supabase login` 與 `supabase link --project-ref <ref>`。
 
 ## 在 Python 後端使用
 

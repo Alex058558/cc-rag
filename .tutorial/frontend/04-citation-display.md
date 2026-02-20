@@ -12,10 +12,10 @@ Phase 4 讓聊天回答能夠引用文件來源。前端需要做三件事：
 
 | 檔案 | 職責 |
 |------|------|
-| `hooks/useChat.ts` | 接收 SSE `sources` 事件，存入 Message |
-| `components/chat/MessageList.tsx` | 解析 `[n]` 標記，替換為 Citation 元件 |
-| `components/chat/Citation.tsx` | 引用按鈕 + Popover 顯示來源詳情 |
-| `components/chat/SourceCard.tsx` | 來源卡片（用於列表預覽） |
+| [`frontend/src/hooks/useChat.ts`](../../frontend/src/hooks/useChat.ts) | 接收 SSE `sources` 事件，存入 Message |
+| [`frontend/src/components/chat/MessageList.tsx`](../../frontend/src/components/chat/MessageList.tsx) | 解析 `[n]` 標記，替換為 Citation 元件 |
+| [`frontend/src/components/chat/Citation.tsx`](../../frontend/src/components/chat/Citation.tsx) | 引用按鈕 + Popover 顯示來源詳情 |
+| [`frontend/src/components/chat/SourceCard.tsx`](../../frontend/src/components/chat/SourceCard.tsx) | 來源卡片（用於列表預覽） |
 
 ## Source 資料結構
 

@@ -21,7 +21,7 @@
 
 ## CC-RAG 的 Chat Service
 
-`backend/services/chat.py` 負責：
+[`backend/services/chat.py`](../../backend/services/chat.py) 負責：
 
 ### 1. 對話管理
 
@@ -74,6 +74,6 @@ async def update_conversation_title(llm, db, conversation_id, first_message):
 
 | 檔案 | 職責 |
 |------|------|
-| `backend/routes/chat.py` | HTTP API |
-| `backend/services/chat.py` | 商業邏輯 |
-| `backend/llm/client.py` | LLM API 串接 |
+| [`backend/routes/chat.py`](../../backend/routes/chat.py) | HTTP API |
+| [`backend/services/chat.py`](../../backend/services/chat.py) | 商業邏輯 |
+| [`backend/llm/client.py`](../../backend/llm/client.py) | LLM API 串接 |
